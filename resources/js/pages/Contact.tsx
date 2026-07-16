@@ -1,26 +1,6 @@
 import { Head } from '@inertiajs/react';
-import { useState } from 'react';
-import type { FormEvent, ReactElement, ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import PublicLayout from '@/layouts/public-layout';
-
-type Branch = 'JS SPORT' | 'ME SPORT';
-type Category = 'Jerseys' | 'PE kits' | 'Office uniforms' | 'Gear' | 'Shoes';
-
-type QuoteForm = {
-    name: string;
-    phoneLine: string;
-    branch: Branch;
-    category: Category;
-    details: string;
-};
-
-const initialForm: QuoteForm = {
-    name: '',
-    phoneLine: '',
-    branch: 'JS SPORT',
-    category: 'Jerseys',
-    details: '',
-};
 
 type PageWithLayout = {
     (): ReactElement;
@@ -28,14 +8,6 @@ type PageWithLayout = {
 };
 
 const Contact: PageWithLayout = () => {
-    const [form, setForm] = useState<QuoteForm>(initialForm);
-    const [submitted, setSubmitted] = useState(false);
-
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setSubmitted(true);
-    };
-
     return (
         <>
             <Head title="ติดต่อ" />
@@ -56,124 +28,72 @@ const Contact: PageWithLayout = () => {
                     <div className="rounded-2xl border border-black/10 bg-white/70 p-5 text-sm backdrop-blur dark:border-white/10 dark:bg-white/5">
                         <p className="font-semibold">ช่องทางติดต่อด่วน</p>
                         <p className="mt-2 text-sport-slate dark:text-slate-300">
-                            LINE: @jssportteam
+                            Facebook: JSSportGroup
                         </p>
                         <p className="text-sport-slate dark:text-slate-300">
-                            โทร: 08x-xxx-xxxx
+                            LINE: JS SPORT
+                        </p>
+                        <p className="text-sport-slate dark:text-slate-300">
+                            TikTok: @j.s.sport_shop / @mesport80
+                        </p>
+                        <p className="text-sport-slate dark:text-slate-300">
+                            โทร: 0813209725
                         </p>
                     </div>
                 </div>
 
-                <form
-                    onSubmit={handleSubmit}
+                <div
                     className="rounded-3xl border border-black/10 bg-white/75 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5 md:p-7"
                 >
-                    <div className="grid gap-4">
-                        <label className="grid gap-2">
-                            <span className="text-sm font-semibold">Name</span>
-                            <input
-                                value={form.name}
-                                onChange={(event) =>
-                                    setForm((current) => ({
-                                        ...current,
-                                        name: event.target.value,
-                                    }))
-                                }
-                                required
-                                className="rounded-xl border border-black/15 bg-white px-4 py-3 text-sm outline-none transition focus:border-sport-accent dark:border-white/20 dark:bg-[#0f1218]"
-                                placeholder="ชื่อ-นามสกุล"
-                            />
-                        </label>
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sport-accent">
+                        ช่องทางติดต่อทางร้าน
+                    </p>
+                    <h2 className="mt-3 text-2xl font-black uppercase leading-tight md:text-3xl">
+                        เลือกช่องทางที่สะดวก
+                    </h2>
+                    <p className="mt-3 text-sm leading-relaxed text-sport-slate dark:text-slate-300 md:text-base">
+                        ติดต่อทีมงานได้ทันทีผ่าน Line, Facebook หรือโทรหาเราโดยตรง
+                    </p>
 
-                        <label className="grid gap-2">
-                            <span className="text-sm font-semibold">โทรศัพท์ / LINE</span>
-                            <input
-                                value={form.phoneLine}
-                                onChange={(event) =>
-                                    setForm((current) => ({
-                                        ...current,
-                                        phoneLine: event.target.value,
-                                    }))
-                                }
-                                required
-                                className="rounded-xl border border-black/15 bg-white px-4 py-3 text-sm outline-none transition focus:border-sport-accent dark:border-white/20 dark:bg-[#0f1218]"
-                                placeholder="08x-xxx-xxxx หรือ LINE ID"
-                            />
-                        </label>
+                    <div className="mt-6 grid gap-3">
+                        <a
+                            href="https://lin.ee/6DeBOxS?fbclid=IwZXh0bgNhZW0CMTAAYnJpZBExanFyZlVsa1lIR1NzY2tad3NydGMGYXBwX2lkEDIyMjAzOTE3ODgyMDA4OTIAAR6IutFKxQ8tLEffeh4yV4hhNnrWnIf5yZu4QayLZcYCBbskaBReQiuzJ_wk4w_aem_iw-o8rJoO1DOcwZpx-GKBA"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center bg-gradient-to-r from-emerald-500 to-green-600 px-5 py-3 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5"
+                            style={{
+                                clipPath:
+                                    'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)',
+                            }}
+                        >
+                            LINE: JS SPORT
+                        </a>
 
-                        <div className="grid gap-4 sm:grid-cols-2">
-                            <label className="grid gap-2">
-                                <span className="text-sm font-semibold">สาขา</span>
-                                <select
-                                    value={form.branch}
-                                    onChange={(event) =>
-                                        setForm((current) => ({
-                                            ...current,
-                                            branch: event.target.value as Branch,
-                                        }))
-                                    }
-                                    className="rounded-xl border border-black/15 bg-white px-4 py-3 text-sm outline-none transition focus:border-sport-accent dark:border-white/20 dark:bg-[#0f1218]"
-                                >
-                                    <option value="JS SPORT">JS SPORT</option>
-                                    <option value="ME SPORT">ME SPORT</option>
-                                </select>
-                            </label>
+                        <a
+                            href="https://www.facebook.com/JSSportGroup?locale=th_TH"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-700 px-5 py-3 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5"
+                            style={{
+                                clipPath:
+                                    'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)',
+                            }}
+                        >
+                            FACEBOOK: JSSPORTGROUP
+                        </a>
 
-                            <label className="grid gap-2">
-                                <span className="text-sm font-semibold">
-                                    หมวดหมู่สินค้า
-                                </span>
-                                <select
-                                    value={form.category}
-                                    onChange={(event) =>
-                                        setForm((current) => ({
-                                            ...current,
-                                            category: event.target.value as Category,
-                                        }))
-                                    }
-                                    className="rounded-xl border border-black/15 bg-white px-4 py-3 text-sm outline-none transition focus:border-sport-accent dark:border-white/20 dark:bg-[#0f1218]"
-                                >
-                                    <option value="Jerseys">เสื้อแข่ง</option>
-                                    <option value="PE kits">ชุดพละ</option>
-                                    <option value="Office uniforms">ยูนิฟอร์มองค์กร</option>
-                                    <option value="Gear">อุปกรณ์กีฬา</option>
-                                    <option value="Shoes">รองเท้า</option>
-                                </select>
-                            </label>
-                        </div>
-
-                        <label className="grid gap-2">
-                            <span className="text-sm font-semibold">รายละเอียดคำสั่งซื้อ</span>
-                            <textarea
-                                value={form.details}
-                                onChange={(event) =>
-                                    setForm((current) => ({
-                                        ...current,
-                                        details: event.target.value,
-                                    }))
-                                }
-                                required
-                                rows={5}
-                                className="rounded-xl border border-black/15 bg-white px-4 py-3 text-sm outline-none transition focus:border-sport-accent dark:border-white/20 dark:bg-[#0f1218]"
-                                placeholder="เช่น ประเภทกีฬา จำนวน สี กำหนดส่ง และตัวอย่างดีไซน์"
-                            />
-                        </label>
+                        <a
+                            href="tel:0813209725"
+                            className="inline-flex items-center justify-center bg-gradient-to-r from-pink-500 to-red-600 px-5 py-3 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5"
+                            style={{
+                                clipPath:
+                                    'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)',
+                            }}
+                        >
+                            โทร 0813209725
+                        </a>
                     </div>
-
-                    <button
-                        type="submit"
-                        className="mt-5 w-full rounded-full bg-sport-accent px-5 py-3 text-sm font-black uppercase tracking-wide text-sport-black shadow-sport-glow transition hover:translate-y-[-1px]"
-                    >
-                        ส่งคำขอใบเสนอราคา
-                    </button>
-
-                    {submitted && (
-                        <p className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-600 dark:text-emerald-300">
-                            ส่งข้อมูลจำลองสำเร็จแล้ว ใน Step 2 จะเชื่อมฟอร์มนี้เข้ากับ
-                            Laravel backend เพื่อ validate และบันทึกข้อมูลจริง
-                        </p>
-                    )}
-                </form>
+                </div>
             </section>
         </>
     );

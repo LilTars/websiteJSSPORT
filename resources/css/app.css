@@ -145,3 +145,156 @@
         @apply bg-background text-foreground;
     }
 }
+
+@keyframes mesport-letter-wave {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    35% {
+        transform: translateY(-6px);
+    }
+
+    60% {
+        transform: translateY(1px);
+    }
+}
+
+@keyframes mesport-auto-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(calc(-50% - 0.625rem));
+    }
+}
+
+@keyframes render-bg-shift {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.86;
+    }
+
+    50% {
+        transform: scale(1.08) rotate(1.4deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.86;
+    }
+}
+
+@keyframes render-orbit {
+    0% {
+        transform: rotateX(66deg) rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateX(66deg) rotateZ(360deg);
+    }
+}
+
+@keyframes render-float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@layer utilities {
+    .mesport-wave {
+        text-shadow: none;
+    }
+
+    .mesport-wave-char {
+        display: inline-block;
+        animation: mesport-letter-wave 1.45s ease-in-out infinite;
+        background-image: linear-gradient(90deg, #2563eb, #06b6d4, #10b981);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        will-change: transform;
+    }
+
+    .mesport-auto-track {
+        width: max-content;
+        animation: mesport-auto-scroll 34s linear infinite;
+        will-change: transform;
+    }
+
+    .render-overlay-bg {
+        background:
+            radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.25), transparent 36%),
+            radial-gradient(circle at 82% 28%, rgba(248, 113, 113, 0.24), transparent 38%),
+            radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.18), transparent 42%),
+            linear-gradient(130deg, #020617 0%, #0f172a 36%, #111827 68%, #1f2937 100%);
+        animation: render-bg-shift 5.4s ease-in-out infinite;
+        transform-origin: center;
+    }
+
+    .render-orbit-wrap {
+        position: relative;
+        width: min(78vw, 350px);
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        perspective: 1200px;
+    }
+
+    .render-orbit-ring,
+    .render-orbit-ring-delay {
+        position: absolute;
+        inset: 14%;
+        border-radius: 9999px;
+        border: 1px solid rgba(125, 211, 252, 0.46);
+        box-shadow:
+            inset 0 0 26px rgba(56, 189, 248, 0.2),
+            0 0 46px rgba(56, 189, 248, 0.18);
+        animation: render-orbit 3.2s linear infinite;
+    }
+
+    .render-orbit-ring-delay {
+        inset: 7%;
+        border-color: rgba(248, 113, 113, 0.44);
+        box-shadow:
+            inset 0 0 30px rgba(248, 113, 113, 0.2),
+            0 0 52px rgba(248, 113, 113, 0.18);
+        animation-duration: 4.2s;
+        animation-direction: reverse;
+    }
+
+    .render-logo-row {
+        position: relative;
+        z-index: 2;
+        width: 86%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        align-items: center;
+        animation: render-float 2.6s ease-in-out infinite;
+    }
+
+    .render-logo {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.38));
+    }
+
+    .render-logo-main {
+        transform: rotateY(-10deg) translateZ(0);
+    }
+
+    .render-logo-sub {
+        transform: rotateY(10deg) translateZ(0);
+    }
+}

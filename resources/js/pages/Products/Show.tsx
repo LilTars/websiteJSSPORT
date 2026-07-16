@@ -1,58 +1,13 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
+import SocialChannelButtons from '@/components/social-channel-buttons';
 import PublicLayout from '@/layouts/public-layout';
+import {
+    productDetailCatalogMock,
+} from '@/mock/menu-data';
 
-type ProductDetail = {
-    id: number;
-    brandTag: string;
-    name: string;
-    price: string;
-    description: string;
-    category: string;
-    material: string;
-    turnaround: string;
-    images: string[];
-};
-
-const productCatalog: ProductDetail[] = [
-    {
-        id: 1,
-        brandTag: 'JS SPORT EXCLUSIVE',
-        name: 'STORM ELITE JERSEY KIT',
-        price: '฿890',
-        category: 'CUSTOM JERSEY',
-        material: 'AEROFIT PRO FABRIC',
-        turnaround: '7-12 DAYS',
-        description:
-            'เสื้อแข่งทรงแข่งขันที่ออกแบบเพื่อทีมจริง เนื้อผ้าเบา ระบายอากาศดี แห้งไว และรองรับการพิมพ์ลายเต็มผืน ให้ภาพลักษณ์คมชัดระดับโปรทุกแมตช์สำคัญของทีมคุณ',
-        images: [
-            'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1900&q=80',
-            'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1900&q=80',
-            'https://images.unsplash.com/photo-1562771379-eafdca7a02f8?auto=format&fit=crop&w=1900&q=80',
-            'https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1900&q=80',
-        ],
-    },
-    {
-        id: 2,
-        brandTag: 'JS SPORT EXCLUSIVE',
-        name: 'ACTIVE SCHOOL PE KIT',
-        price: '฿540',
-        category: 'PE KITS',
-        material: 'LIGHTWEIGHT MESH',
-        turnaround: '5-9 DAYS',
-        description:
-            'ชุดพละดีไซน์ร่วมสมัยสำหรับการใช้งานทุกวัน เน้นความคล่องตัว ทนทาน และความสบายตลอดกิจกรรม รองรับการสกรีนโลโก้และชื่อโรงเรียนอย่างชัดเจน',
-        images: [
-            'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1900&q=80',
-            'https://images.unsplash.com/photo-1483721310020-03333e577078?auto=format&fit=crop&w=1900&q=80',
-            'https://images.unsplash.com/photo-1518459031867-a89b944bffe4?auto=format&fit=crop&w=1900&q=80',
-            'https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?auto=format&fit=crop&w=1900&q=80',
-        ],
-    },
-];
-
-const sizeOptions = ['S', 'M', 'L', 'XL', 'XXL'] as const;
+const productCatalog = productDetailCatalogMock;
 
 type PageWithLayout = {
     (): ReactElement;
@@ -61,7 +16,6 @@ type PageWithLayout = {
 
 const ProductShow: PageWithLayout = () => {
     const [activeImage, setActiveImage] = useState(0);
-    const [selectedSize, setSelectedSize] = useState<(typeof sizeOptions)[number]>('L');
     const { url } = usePage();
 
     const product = useMemo(() => {
@@ -154,9 +108,11 @@ const ProductShow: PageWithLayout = () => {
                                     <span className="block skew-x-12">{product.name}</span>
                                 </h1>
 
-                                <p className="mt-4 bg-gradient-to-r from-blue-700 via-red-600 to-white bg-clip-text text-3xl font-black uppercase text-transparent drop-shadow-sm">
-                                    {product.price}
-                                </p>
+                                {!product.hidePriceOnDetail && (
+                                    <p className="mt-4 bg-gradient-to-r from-blue-700 via-red-600 to-white bg-clip-text text-3xl font-black uppercase text-transparent drop-shadow-sm">
+                                        {product.price}
+                                    </p>
+                                )}
 
                                 <p className="mt-5 text-sm leading-relaxed text-sport-slate dark:text-slate-300">
                                     {product.description}
@@ -177,46 +133,12 @@ const ProductShow: PageWithLayout = () => {
                                     </div>
                                 </div>
 
-                                <div className="mt-7">
-                                    <p className="text-xs font-black uppercase tracking-[0.24em] text-sport-slate dark:text-slate-300">
-                                        Select Size
+                                <div className="mt-8">
+                                    <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
+                                        เลือกซื้อผ่าน
                                     </p>
-                                    <div className="mt-3 grid grid-cols-5 gap-2">
-                                        {sizeOptions.map((size) => {
-                                            const isSelected = selectedSize === size;
-
-                                            return (
-                                                <button
-                                                    key={size}
-                                                    type="button"
-                                                    onClick={() => setSelectedSize(size)}
-                                                    className={`px-0 py-2 text-sm font-black uppercase transition ${
-                                                        isSelected
-                                                            ? 'bg-gradient-to-r from-blue-800 to-red-700 text-white'
-                                                            : 'border border-black/20 bg-white/70 text-sport-text-light hover:border-blue-700 hover:text-blue-700 dark:border-white/20 dark:bg-white/5 dark:text-white dark:hover:border-blue-400 dark:hover:text-blue-400'
-                                                    }`}
-                                                    style={{
-                                                        clipPath:
-                                                            'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)',
-                                                    }}
-                                                >
-                                                    {size}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
+                                    <SocialChannelButtons />
                                 </div>
-
-                                <Link
-                                    href="/contact"
-                                    className="mt-8 inline-flex w-full items-center justify-center bg-gradient-to-r from-blue-800 to-red-700 px-6 py-4 text-center text-sm font-black uppercase tracking-[0.1em] text-white transition hover:-translate-y-0.5 hover:from-blue-900 hover:to-red-800"
-                                    style={{
-                                        clipPath:
-                                            'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)',
-                                    }}
-                                >
-                                    ขอใบเสนอราคา / สั่งทำชุดนี้
-                                </Link>
                             </div>
                         </aside>
                     </div>

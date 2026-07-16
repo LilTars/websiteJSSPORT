@@ -6,6 +6,8 @@ use App\Http\Middleware\EnsureTeamMembership;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'Home')->name('home');
+Route::inertia('/about', 'About')->name('about');
+Route::inertia('/careers', 'Careers')->name('careers');
 Route::inertia('/products', 'Products/Index')->name('products.index');
 Route::inertia('/products/{id}', 'Products/Show')->name('products.show');
 Route::inertia('/contact', 'Contact')->name('contact');

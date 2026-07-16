@@ -20,7 +20,7 @@ const STORAGE_KEY = 'js-sport-theme';
 
 const resolveInitialTheme = (): ThemeMode => {
     if (typeof window === 'undefined') {
-        return 'light';
+        return 'dark';
     }
 
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -29,7 +29,7 @@ const resolveInitialTheme = (): ThemeMode => {
         return stored;
     }
 
-    return 'light';
+    return 'dark';
 };
 
 export function ThemeProvider({ children }: PropsWithChildren) {
