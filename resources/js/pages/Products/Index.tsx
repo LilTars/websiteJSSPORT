@@ -1,92 +1,17 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useMemo, useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import PublicLayout from '@/layouts/public-layout';
+import {
+    productCategoriesMock,
+    productCategoryLabelsMock,
+    productsMock,
+} from '@/mock/menu-data';
+import type { ProductCategory } from '@/mock/menu-data';
 
-type ProductCategory =
-    | 'All'
-    | 'Jerseys'
-    | 'PE kits'
-    | 'Office uniforms'
-    | 'Gear'
-    | 'Shoes';
-
-type Product = {
-    id: number;
-    name: string;
-    category: Exclude<ProductCategory, 'All'>;
-    price: number;
-    imageUrl: string;
-};
-
-const categories: ProductCategory[] = [
-    'All',
-    'Jerseys',
-    'PE kits',
-    'Office uniforms',
-    'Gear',
-    'Shoes',
-];
-
-const categoryLabels: Record<ProductCategory, string> = {
-    All: 'ทั้งหมด',
-    Jerseys: 'เสื้อแข่ง',
-    'PE kits': 'ชุดพละ',
-    'Office uniforms': 'ยูนิฟอร์มองค์กร',
-    Gear: 'อุปกรณ์กีฬา',
-    Shoes: 'รองเท้า',
-};
-
-const products: Product[] = [
-    {
-        id: 1,
-        name: 'ชุดแข่ง Storm Pro',
-        category: 'Jerseys',
-        price: 890,
-        imageUrl:
-            'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80',
-    },
-    {
-        id: 2,
-        name: 'ชุดพละ Active School',
-        category: 'PE kits',
-        price: 540,
-        imageUrl:
-            'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=80',
-    },
-    {
-        id: 3,
-        name: 'ยูนิฟอร์ม Corporate Sprint',
-        category: 'Office uniforms',
-        price: 990,
-        imageUrl:
-            'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80',
-    },
-    {
-        id: 4,
-        name: 'ชุดกรวยซ้อมทีม',
-        category: 'Gear',
-        price: 320,
-        imageUrl:
-            'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?auto=format&fit=crop&w=1200&q=80',
-    },
-    {
-        id: 5,
-        name: 'รองเท้า Velocity Grip',
-        category: 'Shoes',
-        price: 1590,
-        imageUrl:
-            'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1200&q=80',
-    },
-    {
-        id: 6,
-        name: 'เสื้อแข่ง Falcon Match',
-        category: 'Jerseys',
-        price: 760,
-        imageUrl:
-            'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80',
-    },
-];
+const categories = productCategoriesMock;
+const categoryLabels = productCategoryLabelsMock;
+const products = productsMock;
 
 type PageWithLayout = {
     (): ReactElement;
@@ -94,7 +19,26 @@ type PageWithLayout = {
 };
 
 const ProductsIndex: PageWithLayout = () => {
-    const [activeCategory, setActiveCategory] = useState<ProductCategory>('All');
+    const { url } = usePage();
+    const [selectedCategory, setSelectedCategory] = useState<ProductCategory | null>(null);
+
+    const urlCategory = useMemo(() => {
+        const query = url.split('?')[1];
+
+        if (!query) {
+            return null;
+        }
+
+        const requestedCategory = new URLSearchParams(query).get('category');
+
+        if (requestedCategory && categories.includes(requestedCategory as ProductCategory)) {
+            return requestedCategory as ProductCategory;
+        }
+
+        return null;
+    }, [url]);
+
+    const activeCategory = selectedCategory ?? urlCategory ?? 'All';
 
     const filteredProducts = useMemo(() => {
         if (activeCategory === 'All') {
@@ -128,7 +72,7 @@ const ProductsIndex: PageWithLayout = () => {
                             <button
                                 key={category}
                                 type="button"
-                                onClick={() => setActiveCategory(category)}
+                                onClick={() => setSelectedCategory(category)}
                                 className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
                                     isActive
                                         ? 'border-sport-accent bg-sport-accent text-sport-black'
@@ -174,10 +118,12 @@ const ProductsIndex: PageWithLayout = () => {
                                 <h2 className="text-xl font-black uppercase leading-tight tracking-[0.03em]">
                                     {product.name}
                                 </h2>
-                                <div className="flex items-center justify-between">
-                                    <p className="text-2xl font-black uppercase tracking-[0.06em] text-sport-accent">
-                                        ฿{product.price.toLocaleString()}
-                                    </p>
+                                <div className={`flex items-center ${product.hidePriceOnCard ? 'justify-end' : 'justify-between'}`}>
+                                    {!product.hidePriceOnCard && (
+                                        <p className="text-2xl font-black uppercase tracking-[0.06em] text-sport-accent">
+                                            ฿{product.price.toLocaleString()}
+                                        </p>
+                                    )}
                                     <Link
                                         href={`/products/${product.id}`}
                                         className="border-2 border-black/60 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] transition hover:border-sport-pink hover:bg-sport-pink hover:text-white dark:border-white/40"
