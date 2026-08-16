@@ -1,14 +1,3 @@
-# Logo Assets
-
-Place all logo files in this folder.
-
-Recommended:
-- SVG for scalable logos
-- PNG with transparent background for raster logos
-
-Examples:
-- /images/logos/brand-primary.svg
-- /images/logos/brand-white.png
-
-Usage in React/Inertia pages:
-- <img src="/images/logos/brand-primary.svg" alt="Brand logo" />
+version https://git-lfs.github.com/spec/v1
+oid sha256:2174c86877572519a5c5921abf09e0d75f2a046a65d1e0f536b505bf00a653d5
+size 315
