@@ -8,25 +8,54 @@ use Illuminate\Support\Facades\URL;
 
 trait RedirectsToCurrentTeam
 {
+    protected function dashboardRouteForCurrentTeam(Request $request): string
+    {
+        $team = $this->currentTeam($request);
+
+        if (! $team) {
+            return route('home');
+        }
+
+        URL::defaults(['current_team' => $team->slug]);
+
+        return route('dashboard', ['current_team' => $team->slug]);
+    }
+
     protected function redirectPathForCurrentTeam(Request $request, string $redirect): string
     {
         $team = $this->currentTeam($request);
+
+        if (! $team) {
+            return route('home');
+        }
 
         URL::defaults(['current_team' => $team->slug]);
 
         return "/{$team->slug}{$redirect}";
     }
 
-    protected function currentTeam(Request $request): Team
+    protected function currentTeam(Request $request): ?Team
     {
         $user = $request->user();
 
         abort_if(! $user, 403);
 
-        $team = $user->currentTeam ?? $user->personalTeam();
+        $team = $user->currentTeam;
 
-        abort_if(! $team, 403);
+        if ($team && $user->belongsToTeam($team)) {
+            return $team;
+        }
 
-        return $team;
+        $team = $user->personalTeam() ?? $user->fallbackTeam();
+
+        if ($team) {
+            if ($user->belongsToTeam($team)) {
+                $user->switchTeam($team);
+
+                return $team;
+            }
+        }
+
+        return null;
     }
 }

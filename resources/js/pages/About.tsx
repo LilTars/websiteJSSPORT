@@ -1,5 +1,8 @@
-import { Head, Link } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
+import { useEffect } from 'react';
 import type { ReactElement, ReactNode } from 'react';
+import SeoHead from '@/components/seo/seo-head';
+import { trackPageView } from '@/lib/track-click';
 import SocialChannelButtons from '@/components/social-channel-buttons';
 import PublicLayout from '@/layouts/public-layout';
 import {
@@ -18,9 +21,18 @@ type PageWithLayout = {
 };
 
 const About: PageWithLayout = () => {
+    useEffect(() => {
+        trackPageView('about');
+    }, []);
+
     return (
         <>
-            <Head title="เกี่ยวกับเรา" />
+            <SeoHead
+                title="เกี่ยวกับเรา"
+                description="รู้จัก JSSPORT ผู้เชี่ยวชาญด้านชุดกีฬาและงานผลิตครบวงจร พร้อมประสบการณ์ยาวนานกว่า 40 ปี"
+                path="/about"
+                keywords={['เกี่ยวกับ JSSPORT', 'โรงงานชุดกีฬา', 'ผลิตเสื้อกีฬา']}
+            />
 
             <section className="relative overflow-hidden border-b border-pink-100 bg-white">
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(244,114,182,0.16),transparent_34%),radial-gradient(circle_at_85%_22%,rgba(248,113,113,0.12),transparent_26%)]" />

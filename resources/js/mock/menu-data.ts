@@ -18,9 +18,7 @@ export type ProductCategoryGroup = {
     items: ProductSubItem[];
 };
 
-export const utilityItemsMock: UtilityItem[] = [
-    { label: 'ช่วยเหลือ', href: '/help' },
-];
+export const utilityItemsMock: UtilityItem[] = [];
 
 export const menuItemsMock: MenuItem[] = [
     { label: 'หน้าแรก', href: '/' },

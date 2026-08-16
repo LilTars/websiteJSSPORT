@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureAuthRedirects();
     }
 
     /**
@@ -46,5 +49,23 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    /**
+     * Configure guest middleware redirects for team-scoped dashboard routes.
+     */
+    protected function configureAuthRedirects(): void
+    {
+        RedirectIfAuthenticated::redirectUsing(function (Request $request): string {
+            $user = $request->user();
+
+            $team = $user?->currentTeam ?? $user?->personalTeam();
+
+            if ($team) {
+                return route('dashboard', ['current_team' => $team->slug]);
+            }
+
+            return route('home');
+        });
     }
 }

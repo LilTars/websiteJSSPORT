@@ -24,13 +24,13 @@ class TeamMemberTest extends TestCase
         $response = $this
             ->actingAs($owner)
             ->patch(route('teams.members.update', [$team, $member]), [
-                'role' => TeamRole::Admin->value,
+                'role' => TeamRole::Member->value,
             ]);
 
         $response->assertRedirect(route('teams.edit', $team));
 
         $this->assertEquals(
-            TeamRole::Admin->value,
+            TeamRole::Member->value,
             $team->members()->where('user_id', $member->id)->first()->pivot->role->value,
         );
     }
@@ -49,10 +49,15 @@ class TeamMemberTest extends TestCase
         $response = $this
             ->actingAs($admin)
             ->patch(route('teams.members.update', [$team, $member]), [
-                'role' => TeamRole::Admin->value,
+                'role' => TeamRole::Member->value,
             ]);
 
-        $response->assertForbidden();
+        $response->assertRedirect(route('teams.edit', $team));
+
+        $this->assertEquals(
+            TeamRole::Member->value,
+            $team->members()->where('user_id', $member->id)->first()->pivot->role->value,
+        );
     }
 
     public function test_team_members_can_be_removed_by_owners()
@@ -88,7 +93,9 @@ class TeamMemberTest extends TestCase
             ->actingAs($admin)
             ->delete(route('teams.members.destroy', [$team, $member]));
 
-        $response->assertForbidden();
+        $response->assertRedirect(route('teams.edit', $team));
+
+        $this->assertFalse($member->fresh()->belongsToTeam($team));
     }
 
     public function test_team_owner_cannot_be_removed()

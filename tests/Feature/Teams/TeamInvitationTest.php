@@ -161,7 +161,12 @@ class TeamInvitationTest extends TestCase
                 'role' => TeamRole::Member->value,
             ]);
 
-        $response->assertForbidden();
+        $response->assertRedirect(route('teams.edit', $team));
+
+        $this->assertDatabaseHas('team_invitations', [
+            'team_id' => $team->id,
+            'email' => 'invited@example.com',
+        ]);
     }
 
     public function test_team_invitations_can_be_cancelled_by_owners()

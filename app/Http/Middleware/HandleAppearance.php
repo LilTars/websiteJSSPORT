@@ -16,7 +16,14 @@ class HandleAppearance
      */
     public function handle(Request $request, Closure $next): Response
     {
-        View::share('appearance', $request->cookie('appearance') ?? 'dark');
+        $path = trim($request->path(), '/');
+
+        $isBackofficeRoute = preg_match('#(^|/)backoffice(/|$)#', $path) === 1
+            || preg_match('#(^|/)dashboard$#', $path) === 1;
+        $defaultAppearance = $isBackofficeRoute ? 'light' : 'light';
+
+        View::share('defaultAppearance', $defaultAppearance);
+        View::share('appearance', $request->cookie('appearance') ?? $defaultAppearance);
 
         return $next($request);
     }

@@ -1,14 +1,31 @@
-import { Head, Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import SocialChannelButtons from '@/components/social-channel-buttons';
+import SeoHead from '@/components/seo/seo-head';
+import { trackPageView } from '@/lib/track-click';
 import PublicLayout from '@/layouts/public-layout';
-import {
-    careerBenefitsMock,
-    hiringStepsMock,
-} from '@/mock/menu-data';
 
-const benefits = careerBenefitsMock;
-const hiringSteps = hiringStepsMock;
+type CareerBenefit = {
+    title: string;
+    detail: string;
+};
+
+type HiringStep = {
+    number: string;
+    title: string;
+    detail: string;
+};
+
+type OpenPosition = {
+    id: number;
+    title: string;
+    team: string | null;
+    location: string | null;
+    type: string | null;
+    description: string | null;
+};
 
 type PageWithLayout = {
     (): ReactElement;
@@ -16,9 +33,46 @@ type PageWithLayout = {
 };
 
 const Careers: PageWithLayout = () => {
+    const { props } = usePage<{
+        benefits: CareerBenefit[];
+        hiringSteps: HiringStep[];
+        openPositions: OpenPosition[];
+    }>();
+    const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
+
+    const contactChannels = [
+        {
+            label: 'Facebook',
+            href: 'https://www.facebook.com/JSSportGroup?locale=th_TH',
+            accent: 'from-blue-600 to-blue-700',
+            text: 'Facebook: JSSportGroup',
+        },
+        {
+            label: 'LINE',
+            href: 'https://lin.ee/6DeBOxS?fbclid=IwZXh0bgNhZW0CMTAAYnJpZBExanFyZlVsa1lIR1NzY2tad3NydGMGYXBwX2lkEDIyMjAzOTE3ODgyMDA4OTIAAR6IutFKxQ8tLEffeh4yV4hhNnrWnIf5yZu4QayLZcYCBbskaBReQiuzJ_wk4w_aem_iw-o8rJoO1DOcwZpx-GKBA',
+            accent: 'from-emerald-500 to-green-600',
+            text: 'LINE: JS SPORT',
+        },
+        {
+            label: 'โทร',
+            href: 'tel:0813209725',
+            accent: 'from-pink-500 to-red-600',
+            text: 'โทร: 0813209725',
+        },
+    ];
+
+    useEffect(() => {
+        trackPageView('careers');
+    }, []);
+
     return (
         <>
-            <Head title="ร่วมงานกับเรา" />
+            <SeoHead
+                title="ร่วมงานกับเรา"
+                description="ร่วมงานกับ JSSPORT ดูตำแหน่งงานที่เปิดรับและสมัครเข้าทีมผู้เชี่ยวชาญด้านชุดกีฬา"
+                path="/careers"
+                keywords={['งาน JSSPORT', 'สมัครงานโรงงานชุดกีฬา', 'careers sportwear']}
+            />
 
             <section className="relative overflow-hidden border-b border-pink-100 bg-white">
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(244,114,182,0.17),transparent_34%),radial-gradient(circle_at_84%_20%,rgba(248,113,113,0.12),transparent_30%)]" />
@@ -73,7 +127,7 @@ const Careers: PageWithLayout = () => {
                             Why Join Us
                         </p>
                         <div className="mt-5 grid gap-4">
-                            {benefits.map((item) => (
+                            {props.benefits.map((item) => (
                                 <div key={item.title} className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                                     <p className="text-sm font-black uppercase tracking-[0.12em] text-slate-900">
                                         {item.title}
@@ -96,51 +150,49 @@ const Careers: PageWithLayout = () => {
                         </p>
                         <h2 className="mt-2 text-3xl font-black uppercase tracking-tight md:text-6xl">
                             <span className="bg-gradient-to-r from-pink-500 to-red-600 bg-clip-text text-transparent">
-                                ติดต่อทางร้าน
+                                ตำแหน่งที่เปิดรับ
                             </span>
                         </h2>
                     </div>
 
-                    <article
-                        className="group relative overflow-hidden border border-pink-100 bg-white p-6 shadow-[0_20px_46px_-35px_rgba(15,23,42,0.3)] transition duration-300 hover:-translate-y-1 hover:border-pink-300 hover:shadow-[0_28px_50px_-30px_rgba(244,114,182,0.35)] md:p-8"
-                        style={{
-                            clipPath:
-                                'polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%)',
-                        }}
-                    >
-                        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-pink-600">
-                            Recruitment Notice
-                        </p>
-                        <h3 className="mt-4 text-2xl font-black uppercase leading-tight text-slate-900 md:text-3xl">
-                            สนใจสมัครงาน ติดต่อทางร้าน
-                        </h3>
-                        <p className="mt-4 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base">
-                            สามารถสอบถามตำแหน่งงานที่เปิดรับและส่งข้อมูลสมัครงานได้โดยตรงผ่านช่องทางของร้าน
-                            ทีมงานจะช่วยแนะนำตำแหน่งที่เหมาะสมให้คุณ
-                        </p>
-                        <div className="mt-6 flex flex-wrap gap-3">
-                            <Link
-                                href="/contact?source=careers"
-                                className="inline-flex items-center bg-gradient-to-r from-pink-500 to-red-600 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5"
+                    <div className="grid gap-5 md:grid-cols-2">
+                        {props.openPositions.map((position) => (
+                            <article
+                                key={position.id}
+                                className="group relative overflow-hidden border border-pink-100 bg-white p-6 shadow-[0_20px_46px_-35px_rgba(15,23,42,0.3)] transition duration-300 hover:-translate-y-1 hover:border-pink-300 hover:shadow-[0_28px_50px_-30px_rgba(244,114,182,0.35)] md:p-8"
                                 style={{
                                     clipPath:
-                                        'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)',
+                                        'polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%)',
                                 }}
                             >
-                                ติดต่อทางร้าน
-                            </Link>
-                            <a
-                                href="tel:0813209725"
-                                className="inline-flex items-center border border-pink-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-slate-900 transition hover:-translate-y-0.5 hover:border-pink-400 hover:text-pink-600"
-                                style={{
-                                    clipPath:
-                                        'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)',
-                                }}
-                            >
-                                โทร 0813209725
-                            </a>
-                        </div>
-                    </article>
+                                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-pink-600">
+                                    {position.team ?? 'Recruitment'}
+                                </p>
+                                <h3 className="mt-4 text-2xl font-black uppercase leading-tight text-slate-900">
+                                    {position.title}
+                                </h3>
+                                <p className="mt-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
+                                    {position.location ?? '-'} | {position.type ?? '-'}
+                                </p>
+                                <p className="mt-4 text-sm leading-relaxed text-slate-600">
+                                    {position.description ?? 'ติดต่อทีมงานเพื่อดูรายละเอียดเพิ่มเติม'}
+                                </p>
+                                <div className="mt-5">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsContactDialogOpen(true)}
+                                        className="inline-flex items-center bg-gradient-to-r from-pink-500 to-red-600 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5"
+                                        style={{
+                                            clipPath:
+                                                'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)',
+                                        }}
+                                    >
+                                        สมัครตำแหน่งนี้
+                                    </button>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
                 </div>
             </section>
 
@@ -158,7 +210,7 @@ const Careers: PageWithLayout = () => {
                     </div>
 
                     <div className="grid gap-5 md:grid-cols-3">
-                        {hiringSteps.map((step) => (
+                        {props.hiringSteps.map((step) => (
                             <article
                                 key={step.number}
                                 className="relative border border-pink-100 bg-white p-6 shadow-[0_16px_40px_-34px_rgba(239,68,68,0.4)] md:p-7"
@@ -221,6 +273,31 @@ const Careers: PageWithLayout = () => {
                     </div>
                 </div>
             </section>
+            <Dialog open={isContactDialogOpen} onOpenChange={setIsContactDialogOpen}>
+                <DialogContent className="w-[96vw] max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>ติดต่อเพื่อสมัครตำแหน่งนี้</DialogTitle>
+                        <DialogDescription>เลือกช่องทางที่สะดวกสำหรับติดต่อทีมงานได้ทันที</DialogDescription>
+                    </DialogHeader>
+                    <div className="mt-4 grid gap-3">
+                        {contactChannels.map((channel) => (
+                            <a
+                                key={channel.label}
+                                href={channel.href}
+                                target={channel.href.startsWith('http') ? '_blank' : undefined}
+                                rel={channel.href.startsWith('http') ? 'noreferrer' : undefined}
+                                className={`inline-flex items-center justify-center bg-gradient-to-r ${channel.accent} px-4 py-3 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5`}
+                                style={{
+                                    clipPath:
+                                        'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)',
+                                }}
+                            >
+                                {channel.text}
+                            </a>
+                        ))}
+                    </div>
+                </DialogContent>
+            </Dialog>
         </>
     );
 };

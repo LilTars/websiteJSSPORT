@@ -10,8 +10,10 @@ use App\Http\Responses\RegisterResponse;
 use App\Http\Responses\TwoFactorLoginResponse;
 use App\Http\Responses\VerifyEmailResponse;
 use App\Models\TeamInvitation;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -55,6 +57,29 @@ class FortifyServiceProvider extends ServiceProvider
     {
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::createUsersUsing(CreateNewUser::class);
+
+        Fortify::authenticateUsing(function (Request $request): ?User {
+            $identifier = trim((string) $request->string('email')->toString());
+
+            if ($identifier === '') {
+                return null;
+            }
+
+            $user = User::query()
+                ->where('email', $identifier)
+                ->orWhere('username', $identifier)
+                ->first();
+
+            if (! $user instanceof User) {
+                return null;
+            }
+
+            if (! Hash::check((string) $request->input('password'), $user->password)) {
+                return null;
+            }
+
+            return $user;
+        });
     }
 
     /**
@@ -100,9 +125,11 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $identifier = trim((string) $request->input(Fortify::username(), $request->input('username', '')));
+            $throttleKey = Str::transliterate(Str::lower($identifier).'|'.$request->ip());
+            $maxAttempts = app()->environment('local') ? 30 : 5;
 
-            return Limit::perMinute(5)->by($throttleKey);
+            return Limit::perMinute($maxAttempts)->by($throttleKey);
         });
 
         RateLimiter::for('passkeys', function (Request $request) {

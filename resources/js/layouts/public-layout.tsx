@@ -64,26 +64,29 @@ const socialLinks: SocialLink[] = [
 
 function LayoutFrame({ children }: PropsWithChildren) {
     return (
-        <div className="relative isolate min-h-screen bg-white text-sport-text-light antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
+        <div
+            className="relative isolate min-h-screen bg-white text-sport-text-light antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100"
+            style={{ fontFamily: "'IBM Plex Sans Thai Looped', 'Noto Sans Thai Looped', 'Sarabun', 'Prompt', ui-sans-serif, system-ui, sans-serif" }}
+        >
             <div className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(to_top,rgba(251,113,133,0.14),rgba(255,255,255,0.96)_28%,rgba(255,255,255,1)_60%),radial-gradient(circle_at_12%_18%,rgba(244,114,182,0.14),transparent_34%),radial-gradient(circle_at_84%_20%,rgba(248,113,113,0.1),transparent_30%)] dark:bg-[linear-gradient(to_top,rgba(244,63,94,0.16),rgba(2,6,23,0.92)_30%,rgba(2,6,23,1)_62%),radial-gradient(circle_at_12%_18%,rgba(244,114,182,0.2),transparent_36%),radial-gradient(circle_at_84%_20%,rgba(59,130,246,0.14),transparent_34%)]" />
 
             <Navbar />
 
             <main className="relative z-10">{children}</main>
 
-            <footer className="border-t border-slate-700/80 bg-slate-950/95 px-4 py-11 text-slate-100 backdrop-blur-xl md:px-8 md:py-12">
+            <footer className="border-t border-slate-700/80 bg-slate-950/95 px-4 py-10 text-slate-100 backdrop-blur-xl md:px-8 md:py-12">
                 <div className="mx-auto grid w-full max-w-7xl gap-7 md:grid-cols-2 xl:grid-cols-[1.35fr_1fr_1fr] xl:items-center xl:gap-8">
-                    <div className="flex items-center justify-start xl:justify-center">
+                    <div className="flex items-center justify-center md:justify-start xl:justify-center">
                         <img
                             src="/images/logos/logojs.png"
                             alt="JS SPORT Group"
-                            className="h-52 w-auto max-w-[360px] object-contain md:h-56"
+                            className="h-[10.5rem] w-auto max-w-[330px] object-contain sm:h-[13.5rem] sm:max-w-[390px] md:h-[16.5rem] md:max-w-[480px]"
                         />
                     </div>
 
                     <div className="self-center">
                         <p className="text-sm font-semibold text-slate-100">ช่องทางติดตาม</p>
-                        <ul className="mt-4 space-y-2.5 text-sm text-slate-300">
+                        <ul className="mt-4 space-y-3 text-sm text-slate-300">
                             {socialLinks.slice(0, 3).map((social) => (
                                 <li key={social.label}>
                                     <a
@@ -111,7 +114,7 @@ function LayoutFrame({ children }: PropsWithChildren) {
 
                     <div className="self-center">
                         <p className="text-sm font-semibold text-slate-100">ติดต่อเรา</p>
-                        <ul className="mt-4 space-y-2.5 text-sm text-slate-300">
+                        <ul className="mt-4 space-y-3 text-sm text-slate-300">
                             {socialLinks.slice(3).map((social) => (
                                 <li key={social.label}>
                                     <a

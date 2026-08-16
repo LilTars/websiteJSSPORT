@@ -1,2 +1,4 @@
 User-agent: *
 Disallow:
+Host: jssport.co.th
+Sitemap: https://jssport.co.th/sitemap.xml
