@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { FileText, Footprints, Image, LayoutGrid, Package, Tags, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -19,9 +19,9 @@ import type { NavItem } from '@/types';
 
 export function AppSidebar() {
     const page = usePage();
-    const dashboardUrl = page.props.currentTeam
-        ? dashboard(page.props.currentTeam.slug)
-        : '/';
+    const teamSlug = page.props.currentTeam?.slug;
+    const dashboardUrl = teamSlug ? dashboard(teamSlug) : '/';
+    const backofficePath = (module: string): string => (teamSlug ? `/${teamSlug}/backoffice/${module}` : '#');
 
     const mainNavItems: NavItem[] = [
         {
@@ -29,20 +29,39 @@ export function AppSidebar() {
             href: dashboardUrl,
             icon: LayoutGrid,
         },
+        {
+            title: 'จัดการผู้ใช้งาน',
+            href: backofficePath('members'),
+            icon: Users,
+        },
+        {
+            title: 'จัดการแบร์นเนอร์',
+            href: backofficePath('banners'),
+            icon: Image,
+        },
+        {
+            title: 'จัดการประเภทสินค้า',
+            href: backofficePath('product-categories'),
+            icon: Tags,
+        },
+        {
+            title: 'จัดการแบร์นสินค้า',
+            href: backofficePath('brands'),
+            icon: Footprints,
+        },
+        {
+            title: 'จัดการข้อมูลสินค้า',
+            href: backofficePath('products'),
+            icon: Package,
+        },
+        {
+            title: 'ประกาศรับสมัคร',
+            href: backofficePath('job-postings'),
+            icon: FileText,
+        },
     ];
 
-    const footerNavItems: NavItem[] = [
-        {
-            title: 'Repository',
-            href: 'https://github.com/laravel/react-starter-kit',
-            icon: FolderGit2,
-        },
-        {
-            title: 'Documentation',
-            href: 'https://laravel.com/docs/starter-kits#react',
-            icon: BookOpen,
-        },
-    ];
+    const footerNavItems: NavItem[] = [];
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -58,7 +77,7 @@ export function AppSidebar() {
                 </SidebarMenu>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <TeamSwitcher />
+                        <TeamSwitcher disabled />
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>

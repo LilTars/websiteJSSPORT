@@ -1,5 +1,7 @@
-import { Head } from '@inertiajs/react';
+import { useEffect } from 'react';
 import type { ReactElement, ReactNode } from 'react';
+import SeoHead from '@/components/seo/seo-head';
+import { trackPageView } from '@/lib/track-click';
 import PublicLayout from '@/layouts/public-layout';
 
 type PageWithLayout = {
@@ -8,9 +10,18 @@ type PageWithLayout = {
 };
 
 const Contact: PageWithLayout = () => {
+    useEffect(() => {
+        trackPageView('contact');
+    }, []);
+
     return (
         <>
-            <Head title="ติดต่อ" />
+            <SeoHead
+                title="ติดต่อ"
+                description="ติดต่อ JSSPORT เพื่อขอใบเสนอราคาชุดกีฬา เสื้อทีม และอุปกรณ์กีฬา ผ่าน Line, Facebook หรือโทรตรง"
+                path="/contact"
+                keywords={['ติดต่อ JSSPORT', 'ขอใบเสนอราคาชุดกีฬา', 'ร้านชุดกีฬา']}
+            />
 
             <section className="mx-auto grid w-full max-w-7xl gap-8 px-4 pb-14 pt-10 md:grid-cols-2 md:px-8 md:pt-14">
                 <div className="space-y-5">

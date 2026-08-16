@@ -16,9 +16,10 @@ import type { Team } from '@/types';
 
 type TeamSwitcherProps = {
     inHeader?: boolean;
+    disabled?: boolean;
 };
 
-export function TeamSwitcher({ inHeader = false }: TeamSwitcherProps) {
+export function TeamSwitcher({ inHeader = false, disabled = false }: TeamSwitcherProps) {
     const page = usePage();
     const isMobile = useIsMobile();
     const currentTeam = page.props.currentTeam;
@@ -56,11 +57,12 @@ export function TeamSwitcher({ inHeader = false }: TeamSwitcherProps) {
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="ghost"
+                    disabled={disabled}
                     data-test="team-switcher-trigger"
                     className={
                         inHeader
-                            ? 'h-8 gap-1 px-2'
-                            : 'w-full justify-start px-2 has-[>svg]:px-2 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
+                            ? 'h-8 gap-1 px-2 disabled:cursor-not-allowed disabled:opacity-60'
+                            : 'w-full justify-start px-2 has-[>svg]:px-2 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground disabled:cursor-not-allowed disabled:opacity-60'
                     }
                 >
                     <Users

@@ -23,15 +23,7 @@ enum TeamRole: string
      */
     public function permissions(): array
     {
-        return match ($this) {
-            self::Owner => TeamPermission::cases(),
-            self::Admin => [
-                TeamPermission::UpdateTeam,
-                TeamPermission::CreateInvitation,
-                TeamPermission::CancelInvitation,
-            ],
-            self::Member => [],
-        };
+        return TeamPermission::cases();
     }
 
     /**
@@ -48,11 +40,7 @@ enum TeamRole: string
      */
     public function level(): int
     {
-        return match ($this) {
-            self::Owner => 3,
-            self::Admin => 2,
-            self::Member => 1,
-        };
+        return 1;
     }
 
     /**
@@ -70,10 +58,8 @@ enum TeamRole: string
      */
     public static function assignable(): array
     {
-        return collect(self::cases())
-            ->filter(fn (self $role) => $role !== self::Owner)
-            ->map(fn (self $role) => ['value' => $role->value, 'label' => $role->label()])
-            ->values()
-            ->toArray();
+        return [
+            ['value' => self::Member->value, 'label' => self::Member->label()],
+        ];
     }
 }

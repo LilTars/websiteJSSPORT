@@ -118,7 +118,12 @@ class TeamTest extends TestCase
                 'name' => 'Updated Name',
             ]);
 
-        $response->assertForbidden();
+        $response->assertRedirect(route('teams.edit', $team->fresh()));
+
+        $this->assertDatabaseHas('teams', [
+            'id' => $team->id,
+            'name' => 'Updated Name',
+        ]);
     }
 
     public function test_teams_can_be_deleted_by_owners()
@@ -386,7 +391,11 @@ class TeamTest extends TestCase
                 'name' => $team->name,
             ]);
 
-        $response->assertForbidden();
+        $response->assertRedirect(route('teams.index'));
+
+        $this->assertSoftDeleted('teams', [
+            'id' => $team->id,
+        ]);
     }
 
     public function test_users_can_switch_teams()

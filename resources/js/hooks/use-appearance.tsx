@@ -12,6 +12,20 @@ export type UseAppearanceReturn = {
 const listeners = new Set<() => void>();
 let currentAppearance: Appearance = 'dark';
 
+const getDocumentDefaultAppearance = (): Appearance => {
+    if (typeof document === 'undefined') {
+        return 'dark';
+    }
+
+    const value = document.documentElement.dataset.defaultAppearance;
+
+    if (value === 'light' || value === 'dark' || value === 'system') {
+        return value;
+    }
+
+    return 'dark';
+};
+
 const prefersDark = (): boolean => {
     if (typeof window === 'undefined') {
         return false;
@@ -34,7 +48,7 @@ const getStoredAppearance = (): Appearance => {
         return 'dark';
     }
 
-    return (localStorage.getItem('appearance') as Appearance) || 'dark';
+    return (localStorage.getItem('appearance') as Appearance) || getDocumentDefaultAppearance();
 };
 
 const isDarkMode = (appearance: Appearance): boolean => {
@@ -73,11 +87,6 @@ const handleSystemThemeChange = (): void => applyTheme(currentAppearance);
 export function initializeTheme(): void {
     if (typeof window === 'undefined') {
         return;
-    }
-
-    if (!localStorage.getItem('appearance')) {
-        localStorage.setItem('appearance', 'dark');
-        setCookie('appearance', 'dark');
     }
 
     currentAppearance = getStoredAppearance();

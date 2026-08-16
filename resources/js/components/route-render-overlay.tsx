@@ -16,6 +16,7 @@ export default function RouteRenderOverlay({ children }: PropsWithChildren) {
     const [filledSegments, setFilledSegments] = useState(0);
     const loadingTimerRef = useRef<number | null>(null);
     const hideTimerRef = useRef<number | null>(null);
+    const prefersReducedMotionRef = useRef(false);
 
     const clearTimers = useCallback(() => {
         if (loadingTimerRef.current !== null) {
@@ -29,7 +30,40 @@ export default function RouteRenderOverlay({ children }: PropsWithChildren) {
         }
     }, []);
 
+    useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const updatePreference = () => {
+            prefersReducedMotionRef.current = mediaQuery.matches;
+
+            if (mediaQuery.matches) {
+                clearTimers();
+                setIsVisible(false);
+                setIsExiting(false);
+                setFilledSegments(0);
+            }
+        };
+
+        updatePreference();
+        mediaQuery.addEventListener('change', updatePreference);
+
+        return () => {
+            mediaQuery.removeEventListener('change', updatePreference);
+        };
+    }, [clearTimers]);
+
     const startLoadingSequence = useCallback((durationMs: number) => {
+        if (prefersReducedMotionRef.current) {
+            setIsVisible(false);
+            setIsExiting(false);
+            setFilledSegments(0);
+
+            return;
+        }
+
         clearTimers();
         setIsVisible(true);
         setIsExiting(false);

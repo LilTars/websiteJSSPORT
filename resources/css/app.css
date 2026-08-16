@@ -1,6 +1,7 @@
 @config '../../tailwind.config.js';
 
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai+Looped:wght@300;400;500;600;700&family=Noto+Sans+Thai+Looped:wght@300;400;500;600;700&display=swap');
 
 @import 'tailwindcss';
 
@@ -143,6 +144,26 @@
 
     body {
         @apply bg-background text-foreground;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .mesport-wave-char,
+    .mesport-auto-track,
+    .render-overlay-bg,
+    .render-orbit-ring,
+    .render-orbit-ring-delay,
+    .animate-marquee {
+        animation: none !important;
     }
 }
 

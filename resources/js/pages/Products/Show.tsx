@@ -1,13 +1,22 @@
-import { Head, Link, usePage } from '@inertiajs/react';
-import { useMemo, useState } from 'react';
+import { Link, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
+import SeoHead from '@/components/seo/seo-head';
 import SocialChannelButtons from '@/components/social-channel-buttons';
 import PublicLayout from '@/layouts/public-layout';
-import {
-    productDetailCatalogMock,
-} from '@/mock/menu-data';
 
-const productCatalog = productDetailCatalogMock;
+type ProductDetail = {
+    id: number;
+    brandTag: string | null;
+    name: string;
+    price: string | number | null;
+    description: string | null;
+    category: string | null;
+    material: string | null;
+    turnaround: string | null;
+    images: string[];
+    hidePriceOnDetail: boolean;
+};
 
 type PageWithLayout = {
     (): ReactElement;
@@ -16,17 +25,49 @@ type PageWithLayout = {
 
 const ProductShow: PageWithLayout = () => {
     const [activeImage, setActiveImage] = useState(0);
-    const { url } = usePage();
-
-    const product = useMemo(() => {
-        const routeId = Number(url.split('/').pop()?.split('?')[0]);
-
-        return productCatalog.find((item) => item.id === routeId) ?? productCatalog[0];
-    }, [url]);
+    const { props } = usePage<{ product: ProductDetail }>();
+    const product = props.product;
+    const images = product.images.length > 0 ? product.images : ['/images/logos/pd01.jpg'];
+    const primaryImage = images[0] ?? '/images/logos/pd01.jpg';
+    const productSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name,
+        description: product.description ?? `${product.name} จาก JSSPORT`,
+        image: images,
+        category: product.category ?? undefined,
+        brand: product.brandTag
+            ? {
+                '@type': 'Brand',
+                name: product.brandTag,
+            }
+            : undefined,
+        offers: !product.hidePriceOnDetail && product.price !== null
+            ? {
+                '@type': 'Offer',
+                priceCurrency: 'THB',
+                price: typeof product.price === 'number' ? product.price.toFixed(2) : String(product.price),
+                availability: 'https://schema.org/InStock',
+                url: `https://jssport.co.th/products/${product.id}`,
+            }
+            : undefined,
+    };
 
     return (
         <>
-            <Head title={`${product.name} | Product Detail`} />
+            <SeoHead
+                title={product.name}
+                description={product.description ?? `${product.name} สินค้ากีฬาคุณภาพจาก JSSPORT`}
+                path={`/products/${product.id}`}
+                image={primaryImage}
+                type="product"
+                keywords={[
+                    product.name,
+                    product.category ?? 'สินค้า กีฬา',
+                    product.brandTag ?? 'JSSPORT',
+                ]}
+                jsonLd={productSchema}
+            />
 
             <section className="relative overflow-hidden py-8 md:py-10">
                 <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_18%_8%,rgba(37,99,235,0.14)_0%,transparent_44%),radial-gradient(circle_at_82%_12%,rgba(220,38,38,0.12)_0%,transparent_42%)]" />
@@ -54,7 +95,7 @@ const ProductShow: PageWithLayout = () => {
                                 }}
                             >
                                 <img
-                                    src={product.images[activeImage]}
+                                    src={images[activeImage]}
                                     alt={product.name}
                                     className="h-[68vh] min-h-[420px] w-full object-cover transition duration-700 group-hover:scale-[1.03]"
                                 />
@@ -62,7 +103,7 @@ const ProductShow: PageWithLayout = () => {
                             </article>
 
                             <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                {product.images.map((imageUrl, index) => {
+                                {images.map((imageUrl, index) => {
                                     const isActive = activeImage === index;
 
                                     return (
@@ -108,9 +149,11 @@ const ProductShow: PageWithLayout = () => {
                                     <span className="block skew-x-12">{product.name}</span>
                                 </h1>
 
-                                {!product.hidePriceOnDetail && (
+                                {!product.hidePriceOnDetail && product.price !== null && (
                                     <p className="mt-4 bg-gradient-to-r from-blue-700 via-red-600 to-white bg-clip-text text-3xl font-black uppercase text-transparent drop-shadow-sm">
-                                        {product.price}
+                                        {typeof product.price === 'number'
+                                            ? `฿${product.price.toLocaleString()}`
+                                            : product.price}
                                     </p>
                                 )}
 
