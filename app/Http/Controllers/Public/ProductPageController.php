@@ -59,14 +59,41 @@ class ProductPageController extends Controller
 
     private function resolveImageUrl(?string $path): ?string
     {
-        if ($path === null || $path === '') {
+        if ($path === null) {
             return null;
         }
 
-        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '/')) {
-            return $path;
+        $normalized = trim($path);
+        $normalized = str_replace('\\', '/', $normalized);
+        $normalized = preg_replace('#^/+#', '', $normalized) ?? $normalized;
+
+        if ($normalized === '') {
+            return null;
         }
 
-        return Storage::disk('public')->url($path);
+        if (preg_match('#^https?://#i', $normalized)) {
+            $host = parse_url($normalized, PHP_URL_HOST);
+            $pathOnly = parse_url($normalized, PHP_URL_PATH) ?? $normalized;
+
+            if ($host !== null && ! in_array(strtolower($host), ['localhost', '127.0.0.1'], true)) {
+                return $normalized;
+            }
+
+            $normalized = ltrim($pathOnly, '/');
+        }
+
+        if (str_starts_with($normalized, 'images/') || str_starts_with($normalized, 'uploads/') || str_starts_with($normalized, 'storage/')) {
+            return '/'.$normalized;
+        }
+
+        if (str_starts_with($normalized, '/')) {
+            return $normalized;
+        }
+
+        if (str_starts_with($normalized, 'http://') || str_starts_with($normalized, 'https://')) {
+            return $normalized;
+        }
+
+        return Storage::disk('public')->url($normalized);
     }
 }
