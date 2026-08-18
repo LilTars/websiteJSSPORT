@@ -10,11 +10,19 @@ export type UseAppearanceReturn = {
 };
 
 const listeners = new Set<() => void>();
-let currentAppearance: Appearance = 'dark';
+let currentAppearance: Appearance = 'light';
+
+const isBackoffice = (): boolean => {
+    if (typeof document === 'undefined') {
+        return false;
+    }
+
+    return document.documentElement.dataset.backoffice === 'true';
+};
 
 const getDocumentDefaultAppearance = (): Appearance => {
     if (typeof document === 'undefined') {
-        return 'dark';
+        return 'light';
     }
 
     const value = document.documentElement.dataset.defaultAppearance;
@@ -23,7 +31,7 @@ const getDocumentDefaultAppearance = (): Appearance => {
         return value;
     }
 
-    return 'dark';
+    return 'light';
 };
 
 const prefersDark = (): boolean => {
@@ -45,7 +53,11 @@ const setCookie = (name: string, value: string, days = 365): void => {
 
 const getStoredAppearance = (): Appearance => {
     if (typeof window === 'undefined') {
-        return 'dark';
+        return 'light';
+    }
+
+    if (isBackoffice()) {
+        return 'light';
     }
 
     return (localStorage.getItem('appearance') as Appearance) || getDocumentDefaultAppearance();
@@ -100,7 +112,7 @@ export function useAppearance(): UseAppearanceReturn {
     const appearance: Appearance = useSyncExternalStore(
         subscribe,
         () => currentAppearance,
-        () => 'dark',
+        () => 'light',
     );
 
     const resolvedAppearance: ResolvedAppearance = isDarkMode(appearance)
@@ -108,15 +120,16 @@ export function useAppearance(): UseAppearanceReturn {
         : 'light';
 
     const updateAppearance = (mode: Appearance): void => {
-        currentAppearance = mode;
+        const nextAppearance = isBackoffice() ? 'light' : mode;
+        currentAppearance = nextAppearance;
 
         // Store in localStorage for client-side persistence...
-        localStorage.setItem('appearance', mode);
+        localStorage.setItem('appearance', nextAppearance);
 
         // Store in cookie for SSR...
-        setCookie('appearance', mode);
+        setCookie('appearance', nextAppearance);
 
-        applyTheme(mode);
+        applyTheme(nextAppearance);
         notify();
     };
 

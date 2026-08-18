@@ -20,10 +20,13 @@ class HandleAppearance
 
         $isBackofficeRoute = preg_match('#(^|/)backoffice(/|$)#', $path) === 1
             || preg_match('#(^|/)dashboard$#', $path) === 1;
-        $defaultAppearance = $isBackofficeRoute ? 'light' : 'light';
+        $defaultAppearance = 'light';
+        $appearance = $isBackofficeRoute
+            ? 'light'
+            : ($request->cookie('appearance') ?? $defaultAppearance);
 
         View::share('defaultAppearance', $defaultAppearance);
-        View::share('appearance', $request->cookie('appearance') ?? $defaultAppearance);
+        View::share('appearance', $appearance);
 
         return $next($request);
     }
