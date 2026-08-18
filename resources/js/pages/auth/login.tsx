@@ -1,4 +1,5 @@
-import { Form, Head } from '@inertiajs/react';
+import { Form, Head, Link } from '@inertiajs/react';
+import { ArrowLeft } from 'lucide-react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TeamInvitationAlert from '@/components/team-invitation-alert';
@@ -6,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import { home } from '@/routes';
 import { store } from '@/routes/login';
 import type { TeamInvitationContext } from '@/types';
 
@@ -38,6 +40,15 @@ export default function Login({
             >
                 {({ processing, errors }) => (
                     <div className="grid gap-6 rounded-2xl border border-slate-200 bg-white p-6 text-slate-900 shadow-sm md:p-8">
+                        <Link
+                            href={home()}
+                            className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+                            aria-label="ย้อนกลับไปหน้าหลัก"
+                        >
+                            <ArrowLeft className="size-4" aria-hidden="true" />
+                            ย้อนกลับ
+                        </Link>
+
                         <div className="flex justify-center">
                             <img
                                 src="/images/logos/logojs.png"

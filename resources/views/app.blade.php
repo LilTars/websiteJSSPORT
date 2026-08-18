@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html
     lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    data-default-appearance="{{ $defaultAppearance ?? 'dark' }}"
-    @class(['dark' => ($appearance ?? ($defaultAppearance ?? 'dark')) == 'dark'])
+    data-default-appearance="{{ $defaultAppearance ?? 'light' }}"
+    data-backoffice="{{ request()->is('*backoffice*', 'dashboard') ? 'true' : 'false' }}"
+    @class(['dark' => ($appearance ?? ($defaultAppearance ?? 'light')) == 'dark'])
 >
     <head>
         <meta charset="utf-8">
@@ -12,7 +13,7 @@
         {{-- Inline script to detect system dark mode preference and apply it immediately --}}
         <script>
             (function() {
-                const appearance = '{{ $appearance ?? ($defaultAppearance ?? "dark") }}';
+                const appearance = '{{ $appearance ?? ($defaultAppearance ?? "light") }}';
 
                 if (appearance === 'system') {
                     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
