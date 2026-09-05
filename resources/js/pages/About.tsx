@@ -2,9 +2,9 @@ import { Link } from '@inertiajs/react';
 import { useEffect } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import SeoHead from '@/components/seo/seo-head';
-import { trackPageView } from '@/lib/track-click';
 import SocialChannelButtons from '@/components/social-channel-buttons';
 import PublicLayout from '@/layouts/public-layout';
+import { trackPageView } from '@/lib/track-click';
 import {
     legacyFeaturesMock,
     productionCapabilitiesMock,
@@ -41,7 +41,7 @@ const About: PageWithLayout = () => {
                         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-pink-500">
                             About JS Sport Group
                         </p>
-                        <h1 className="mt-4 max-w-5xl text-4xl font-black uppercase leading-[0.86] tracking-tight md:text-6xl lg:text-7xl">
+                        <h1 className="mt-4 max-w-5xl text-4xl font-black uppercase leading-[1.25] md:text-6xl lg:text-7xl">
                             <span className="bg-gradient-to-r from-pink-500 to-red-600 bg-clip-text text-transparent">
                                 บริษัท เจ.เอส.สปอร์ต กรุ๊ป จำกัด
                             </span>
@@ -55,7 +55,7 @@ const About: PageWithLayout = () => {
                         <div className="mt-8 flex flex-wrap gap-3">
                             <Link
                                 href="/contact"
-                                className="inline-flex items-center bg-gradient-to-r from-pink-500 to-red-600 px-6 py-3 text-sm font-black uppercase tracking-[0.18em] text-white transition hover:-translate-y-0.5"
+                                className="inline-flex items-center bg-gradient-to-r from-pink-500 to-red-600 px-6 py-3 text-sm font-black uppercase text-white transition hover:-translate-y-0.5"
                                 style={{
                                     clipPath:
                                         'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)',
@@ -67,7 +67,7 @@ const About: PageWithLayout = () => {
                                 href="https://www.google.com/maps?cid=17269871248021325741&g_mp=CiVnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLkdldFBsYWNlEAMYASAF&hl=th-TH&source=embed"
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex items-center border border-pink-200 bg-white px-6 py-3 text-sm font-black uppercase tracking-[0.18em] text-slate-900 transition hover:-translate-y-0.5 hover:border-pink-400 hover:text-pink-600"
+                                className="inline-flex items-center border border-pink-200 bg-white px-6 py-3 text-sm font-black uppercase text-slate-900 transition hover:-translate-y-0.5 hover:border-pink-400 hover:text-pink-600"
                                 style={{
                                     clipPath:
                                         'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)',
@@ -115,7 +115,7 @@ const About: PageWithLayout = () => {
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-pink-500">
                             Core Services
                         </p>
-                        <h2 className="mt-2 text-3xl font-black uppercase tracking-tight md:text-6xl">
+                        <h2 className="mt-2 text-3xl font-black uppercase leading-[1.25] md:text-6xl">
                             <span className="bg-gradient-to-r from-pink-500 to-red-600 bg-clip-text text-transparent">
                                 บริการหลักของเรา
                             </span>
@@ -151,7 +151,7 @@ const About: PageWithLayout = () => {
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-pink-500">
                             Production Flow
                         </p>
-                        <h2 className="mt-2 text-3xl font-black uppercase tracking-tight md:text-6xl">
+                        <h2 className="mt-2 text-3xl font-black uppercase leading-[1.25] md:text-6xl">
                             <span className="bg-gradient-to-r from-pink-500 to-red-600 bg-clip-text text-transparent">
                                 มาตรฐานการทำงานที่ไว้ใจได้
                             </span>
@@ -189,7 +189,7 @@ const About: PageWithLayout = () => {
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-pink-500">
                             Contact & Location
                         </p>
-                        <h2 className="mt-2 text-3xl font-black uppercase tracking-tight md:text-6xl">
+                        <h2 className="mt-2 text-3xl font-black uppercase leading-[1.25] md:text-6xl">
                             <span className="bg-gradient-to-r from-pink-500 to-red-600 bg-clip-text text-transparent">
                                 พร้อมดูแลทุกการติดต่อ
                             </span>
@@ -197,7 +197,7 @@ const About: PageWithLayout = () => {
 
                         <div className="mt-8 grid gap-4">
                             <div className="rounded-3xl border border-pink-100 bg-white p-6 shadow-[0_18px_45px_-38px_rgba(15,23,42,0.35)]">
-                                <p className="text-xs font-black uppercase tracking-[0.22em] text-pink-500">
+                                <p className="text-xs font-black uppercase text-pink-500">
                                     Call Center / บริการลูกค้า
                                 </p>
                                 <p className="mt-4 text-lg font-semibold text-slate-900">

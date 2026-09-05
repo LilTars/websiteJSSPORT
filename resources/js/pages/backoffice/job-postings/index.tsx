@@ -4,7 +4,27 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import BackofficeHero from '@/pages/backoffice/components/backoffice-hero';
 import PaginationLinks from '@/pages/backoffice/components/pagination-links';
 import StatsStrip from '@/pages/backoffice/components/stats-strip';
-import { backofficePath, boolLabel, canManageTeam } from '@/pages/backoffice/shared';
+import {
+    ActionButton,
+    ActionGroup,
+    BackofficePage,
+    DataTable,
+    EmptyRow,
+    FieldError,
+    NoPermission,
+    Panel,
+    PanelHeader,
+    PrimaryButton,
+    StatusBadge,
+    TableBody,
+    TableHead,
+    Td,
+    TextArea,
+    TextInput,
+    ToggleActiveButton,
+    Tr,
+} from '@/pages/backoffice/components/ui-kit';
+import { backofficePath, canManageTeam } from '@/pages/backoffice/shared';
 import type { Paginated, SharedPageProps } from '@/pages/backoffice/shared';
 
 type PostingRow = {
@@ -41,8 +61,8 @@ export default function JobPostingsIndex() {
     });
 
     if (!teamSlug) {
-return <div className="p-6">No current team selected.</div>;
-}
+        return <div className="p-6">No current team selected.</div>;
+    }
 
     const basePath = backofficePath(teamSlug, 'job-postings');
     const stats = [
@@ -50,12 +70,11 @@ return <div className="p-6">No current team selected.</div>;
         { label: 'เปิดใช้งาน', value: props.items.data.filter((posting) => posting.is_active).length },
         { label: 'ปิดใช้งาน', value: props.items.data.filter((posting) => !posting.is_active).length },
     ];
-    const actionButtonBaseClass = 'rounded px-2 py-1 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1';
 
     return (
         <>
             <Head title="ประกาศรับสมัครงาน" />
-            <div className="space-y-6 bg-white p-4 text-slate-900 md:p-6">
+            <BackofficePage>
                 <BackofficeHero
                     title="ประกาศรับสมัครงาน"
                     description="จัดการประกาศด้วยโครงง่าย อ่านไว: ตำแหน่ง, รายละเอียด และสถานะการใช้งาน"
@@ -63,46 +82,61 @@ return <div className="p-6">No current team selected.</div>;
 
                 <StatsStrip cards={stats} />
 
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                    <div className="mb-4 flex items-center justify-between">
-                        <h2 className="text-base font-semibold text-slate-900">ข้อมูลประกาศ</h2>
-                        {canManage && (
-                            <button type="button" onClick={() => setIsCreateOpen(true)} className="rounded-xl bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700">เพิ่มประกาศรับสมัคร</button>
+                <Panel>
+                    <PanelHeader
+                        title="ข้อมูลประกาศ"
+                        action={canManage && (
+                            <PrimaryButton onClick={() => setIsCreateOpen(true)}>เพิ่มประกาศรับสมัคร</PrimaryButton>
                         )}
-                    </div>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-slate-200 text-sm">
-                        <thead className="bg-slate-50"><tr><th className="px-3 py-2 text-left">ตำแหน่ง</th><th className="px-3 py-2 text-left">จำนวนอัตรา</th><th className="px-3 py-2 text-left">รายละเอียด</th><th className="px-3 py-2 text-left">วันที่ประกาศ</th><th className="px-3 py-2 text-left">สถานะ</th><th className="px-3 py-2 text-left">actions</th></tr></thead>
-                        <tbody className="divide-y divide-slate-100">
+                    />
+
+                    <DataTable>
+                        <TableHead columns={['ตำแหน่ง', 'จำนวนอัตรา', 'รายละเอียด', 'วันที่ประกาศ', 'สถานะ', 'จัดการ']} />
+                        <TableBody>
+                            {props.items.data.length === 0 && <EmptyRow colSpan={6}>ยังไม่มีประกาศรับสมัคร</EmptyRow>}
                             {props.items.data.map((posting) => (
-                                <tr key={posting.id}>
-                                    <td className="px-3 py-2 font-medium text-slate-800">{posting.title}</td>
-                                    <td className="px-3 py-2 text-slate-700">{posting.positions_count}</td>
-                                    <td className="px-3 py-2 text-slate-600">{posting.description ?? '-'}</td>
-                                    <td className="px-3 py-2">{posting.published_at ?? '-'}</td>
-                                    <td className="px-3 py-2">{boolLabel(posting.is_active)}</td>
-                                    <td className="px-3 py-2">
-                                        <div className="flex gap-2">
-                                            {canManage ? (
-                                                <>
-                                                    <button type="button" onClick={() => router.put(`${basePath}/${posting.id}/toggle-active`, {}, { preserveScroll: true })} className={`${actionButtonBaseClass} ${posting.is_active ? 'border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 focus-visible:ring-amber-400' : 'border border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 focus-visible:ring-emerald-400'}`}>{posting.is_active ? 'ปิดใช้งาน' : 'เปิดใช้งาน'}</button>
-                                                    <button type="button" onClick={() => {
- setEditingId(posting.id); editForm.setData('title', posting.title); editForm.setData('description', posting.description ?? ''); editForm.setData('positions_count', String(posting.positions_count)); setIsEditOpen(true); 
-}} className={`${actionButtonBaseClass} border border-sky-300 bg-sky-50 text-sky-700 hover:bg-sky-100 focus-visible:ring-sky-400`}>แก้ไข</button>
-                                                    <button type="button" onClick={() => router.delete(`${basePath}/${posting.id}`, { preserveScroll: true })} className={`${actionButtonBaseClass} border border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100 focus-visible:ring-rose-400`}>ลบ</button>
-                                                </>
-                                            ) : (
-                                                <span className="text-xs text-slate-400">สิทธิ์ไม่เพียงพอ</span>
-                                            )}
-                                        </div>
-                                    </td>
-                                </tr>
+                                <Tr key={posting.id}>
+                                    <Td className="font-medium">{posting.title}</Td>
+                                    <Td>{posting.positions_count}</Td>
+                                    <Td className="max-w-md text-muted-foreground">{posting.description ?? '-'}</Td>
+                                    <Td className="text-muted-foreground">{posting.published_at ?? '-'}</Td>
+                                    <Td><StatusBadge isActive={posting.is_active} /></Td>
+                                    <Td>
+                                        {canManage ? (
+                                            <ActionGroup>
+                                                <ToggleActiveButton
+                                                    isActive={posting.is_active}
+                                                    onClick={() => router.put(`${basePath}/${posting.id}/toggle-active`, {}, { preserveScroll: true })}
+                                                />
+                                                <ActionButton
+                                                    variant="edit"
+                                                    onClick={() => {
+                                                        setEditingId(posting.id);
+                                                        editForm.setData('title', posting.title);
+                                                        editForm.setData('description', posting.description ?? '');
+                                                        editForm.setData('positions_count', String(posting.positions_count));
+                                                        setIsEditOpen(true);
+                                                    }}
+                                                >
+                                                    แก้ไข
+                                                </ActionButton>
+                                                <ActionButton
+                                                    variant="danger"
+                                                    onClick={() => router.delete(`${basePath}/${posting.id}`, { preserveScroll: true })}
+                                                >
+                                                    ลบ
+                                                </ActionButton>
+                                            </ActionGroup>
+                                        ) : (
+                                            <NoPermission />
+                                        )}
+                                    </Td>
+                                </Tr>
                             ))}
-                        </tbody>
-                        </table>
-                    </div>
+                        </TableBody>
+                    </DataTable>
                     <div className="mt-4"><PaginationLinks links={props.items.links} /></div>
-                </div>
+                </Panel>
 
                 <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
                     <DialogContent className="w-[96vw] max-w-xl">
@@ -120,12 +154,12 @@ return <div className="p-6">No current team selected.</div>;
                                 },
                             });
                         }}>
-                            <input value={createForm.data.title} onChange={(event) => createForm.setData('title', event.target.value)} placeholder="ตำแหน่ง" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
-                            {createForm.errors.title && <p className="text-xs text-rose-600">{createForm.errors.title}</p>}
-                            <textarea value={createForm.data.description} onChange={(event) => createForm.setData('description', event.target.value)} placeholder="รายละเอียด" rows={5} className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
-                            {createForm.errors.description && <p className="text-xs text-rose-600">{createForm.errors.description}</p>}
+                            <TextInput value={createForm.data.title} onChange={(event) => createForm.setData('title', event.target.value)} placeholder="ตำแหน่ง" />
+                            <FieldError message={createForm.errors.title} />
+                            <TextArea value={createForm.data.description} onChange={(event) => createForm.setData('description', event.target.value)} placeholder="รายละเอียด" rows={5} />
+                            <FieldError message={createForm.errors.description} />
                             <DialogFooter>
-                                <button type="submit" disabled={createForm.processing} className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60">บันทึก</button>
+                                <PrimaryButton type="submit" disabled={createForm.processing} className="px-4">บันทึก</PrimaryButton>
                             </DialogFooter>
                         </form>
                     </DialogContent>
@@ -160,17 +194,17 @@ return <div className="p-6">No current team selected.</div>;
                                 },
                             });
                         }}>
-                            <input value={editForm.data.title} onChange={(event) => editForm.setData('title', event.target.value)} placeholder="ตำแหน่ง" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
-                            {editForm.errors.title && <p className="text-xs text-rose-600">{editForm.errors.title}</p>}
-                            <textarea value={editForm.data.description} onChange={(event) => editForm.setData('description', event.target.value)} placeholder="รายละเอียด" rows={5} className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
-                            {editForm.errors.description && <p className="text-xs text-rose-600">{editForm.errors.description}</p>}
+                            <TextInput value={editForm.data.title} onChange={(event) => editForm.setData('title', event.target.value)} placeholder="ตำแหน่ง" />
+                            <FieldError message={editForm.errors.title} />
+                            <TextArea value={editForm.data.description} onChange={(event) => editForm.setData('description', event.target.value)} placeholder="รายละเอียด" rows={5} />
+                            <FieldError message={editForm.errors.description} />
                             <DialogFooter>
-                                <button type="submit" disabled={editForm.processing || editingId === null} className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60">บันทึก</button>
+                                <PrimaryButton type="submit" disabled={editForm.processing || editingId === null} className="px-4">บันทึก</PrimaryButton>
                             </DialogFooter>
                         </form>
                     </DialogContent>
                 </Dialog>
-            </div>
+            </BackofficePage>
         </>
     );
 }

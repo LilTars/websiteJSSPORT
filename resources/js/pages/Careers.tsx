@@ -1,11 +1,11 @@
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import type { ReactElement, ReactNode } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import SocialChannelButtons from '@/components/social-channel-buttons';
 import SeoHead from '@/components/seo/seo-head';
-import { trackPageView } from '@/lib/track-click';
+import SocialChannelButtons from '@/components/social-channel-buttons';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import PublicLayout from '@/layouts/public-layout';
+import { trackPageView } from '@/lib/track-click';
 
 type CareerBenefit = {
     title: string;
@@ -81,7 +81,7 @@ const Careers: PageWithLayout = () => {
                         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-pink-500">
                             Careers at JS Sport Group
                         </p>
-                        <h1 className="mt-4 text-4xl font-black uppercase leading-[0.86] tracking-tight md:text-6xl lg:text-7xl">
+                        <h1 className="mt-4 text-4xl font-black uppercase leading-[1.25] md:text-6xl lg:text-7xl">
                             <span className="bg-gradient-to-r from-pink-500 to-red-600 bg-clip-text text-transparent">
                                 ร่วมงานกับเรา
                             </span>
@@ -94,7 +94,7 @@ const Careers: PageWithLayout = () => {
                         <div className="mt-8 flex flex-wrap gap-3">
                             <a
                                 href="#open-positions"
-                                className="inline-flex items-center bg-gradient-to-r from-pink-500 to-red-600 px-6 py-3 text-sm font-black uppercase tracking-[0.18em] text-white transition hover:-translate-y-0.5"
+                                className="inline-flex items-center bg-gradient-to-r from-pink-500 to-red-600 px-6 py-3 text-sm font-black uppercase text-white transition hover:-translate-y-0.5"
                                 style={{
                                     clipPath:
                                         'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)',
@@ -104,7 +104,7 @@ const Careers: PageWithLayout = () => {
                             </a>
                             <Link
                                 href="/contact"
-                                className="inline-flex items-center border border-pink-200 bg-white px-6 py-3 text-sm font-black uppercase tracking-[0.18em] text-slate-900 transition hover:-translate-y-0.5 hover:border-pink-400 hover:text-pink-600"
+                                className="inline-flex items-center border border-pink-200 bg-white px-6 py-3 text-sm font-black uppercase text-slate-900 transition hover:-translate-y-0.5 hover:border-pink-400 hover:text-pink-600"
                                 style={{
                                     clipPath:
                                         'polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%)',
@@ -129,7 +129,7 @@ const Careers: PageWithLayout = () => {
                         <div className="mt-5 grid gap-4">
                             {props.benefits.map((item) => (
                                 <div key={item.title} className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
-                                    <p className="text-sm font-black uppercase tracking-[0.12em] text-slate-900">
+                                    <p className="text-sm font-black uppercase text-slate-900">
                                         {item.title}
                                     </p>
                                     <p className="mt-2 text-sm leading-relaxed text-slate-600">
@@ -148,7 +148,7 @@ const Careers: PageWithLayout = () => {
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-pink-500">
                             Open Positions
                         </p>
-                        <h2 className="mt-2 text-3xl font-black uppercase tracking-tight md:text-6xl">
+                        <h2 className="mt-2 text-3xl font-black uppercase leading-[1.25] md:text-6xl">
                             <span className="bg-gradient-to-r from-pink-500 to-red-600 bg-clip-text text-transparent">
                                 ตำแหน่งที่เปิดรับ
                             </span>
@@ -165,13 +165,13 @@ const Careers: PageWithLayout = () => {
                                         'polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%)',
                                 }}
                             >
-                                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-pink-600">
+                                <p className="text-[11px] font-bold uppercase text-pink-600">
                                     {position.team ?? 'Recruitment'}
                                 </p>
                                 <h3 className="mt-4 text-2xl font-black uppercase leading-tight text-slate-900">
                                     {position.title}
                                 </h3>
-                                <p className="mt-2 text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
+                                <p className="mt-2 text-xs font-bold uppercase text-slate-500">
                                     {position.location ?? '-'} | {position.type ?? '-'}
                                 </p>
                                 <p className="mt-4 text-sm leading-relaxed text-slate-600">
@@ -181,7 +181,7 @@ const Careers: PageWithLayout = () => {
                                     <button
                                         type="button"
                                         onClick={() => setIsContactDialogOpen(true)}
-                                        className="inline-flex items-center bg-gradient-to-r from-pink-500 to-red-600 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5"
+                                        className="inline-flex items-center bg-gradient-to-r from-pink-500 to-red-600 px-4 py-2 text-xs font-black uppercase text-white transition hover:-translate-y-0.5"
                                         style={{
                                             clipPath:
                                                 'polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%)',
@@ -202,7 +202,7 @@ const Careers: PageWithLayout = () => {
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-pink-500">
                             Hiring Process
                         </p>
-                        <h2 className="mt-2 text-3xl font-black uppercase tracking-tight md:text-6xl">
+                        <h2 className="mt-2 text-3xl font-black uppercase leading-[1.25] md:text-6xl">
                             <span className="bg-gradient-to-r from-pink-500 to-red-600 bg-clip-text text-transparent">
                                 ขั้นตอนการสมัครงาน
                             </span>
@@ -249,7 +249,7 @@ const Careers: PageWithLayout = () => {
                                 <p className="text-xs font-semibold uppercase tracking-[0.24em] text-pink-500">
                                     Start Your Journey
                                 </p>
-                                <h2 className="mt-3 text-3xl font-black uppercase tracking-tight md:text-5xl">
+                                <h2 className="mt-3 text-3xl font-black uppercase leading-[1.25] md:text-5xl">
                                     <span className="bg-gradient-to-r from-pink-500 to-red-600 bg-clip-text text-transparent">
                                         ส่งโปรไฟล์มาร่วมทีมกับเรา
                                     </span>
@@ -286,7 +286,7 @@ const Careers: PageWithLayout = () => {
                                 href={channel.href}
                                 target={channel.href.startsWith('http') ? '_blank' : undefined}
                                 rel={channel.href.startsWith('http') ? 'noreferrer' : undefined}
-                                className={`inline-flex items-center justify-center bg-gradient-to-r ${channel.accent} px-4 py-3 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5`}
+                                className={`inline-flex items-center justify-center bg-gradient-to-r ${channel.accent} px-4 py-3 text-sm font-black uppercase text-white transition hover:-translate-y-0.5`}
                                 style={{
                                     clipPath:
                                         'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)',

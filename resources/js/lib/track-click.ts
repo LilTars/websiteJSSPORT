@@ -1,3 +1,5 @@
+import { hasConsentFor } from '@/lib/cookie-consent';
+
 type ClickEventType = 'page_view' | 'homepage_section_click' | 'product_category_click' | 'product_click';
 
 type SiteClickPayload = {
@@ -12,7 +14,7 @@ type SiteClickPayload = {
     referrer?: string | null;
 };
 
-export function trackPageView(page: 'home' | 'products' | 'about' | 'careers' | 'contact'): void {
+export function trackPageView(page: 'home' | 'products' | 'about' | 'careers' | 'contact' | 'privacy'): void {
     if (typeof window === 'undefined') {
         return;
     }
@@ -27,6 +29,12 @@ export function trackPageView(page: 'home' | 'products' | 'about' | 'careers' | 
 
 export function trackSiteClick(payload: SiteClickPayload): void {
     if (typeof window === 'undefined') {
+        return;
+    }
+
+    // These events exist to measure how the site is used, which the policy lists
+    // under the analytics consent category - so nothing is sent until it is given.
+    if (!hasConsentFor('analytics')) {
         return;
     }
 

@@ -104,7 +104,7 @@ function AreaTrendChart({ data }: { data: ChartPoint[] }) {
 
     return (
         <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-3">
-            <div className="mb-2 flex items-center justify-between gap-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">
+            <div className="mb-2 flex items-center justify-between gap-3 text-[10px] font-bold uppercase text-slate-500">
                 <span>จำนวน session ต่อวัน</span>
                 <span>{startLabel} — {endLabel}</span>
             </div>
@@ -254,7 +254,7 @@ function DashboardChartCard({
         <article className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
             <div className="flex items-start justify-between gap-3">
                 <div>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">{title}</p>
+                    <p className="text-[11px] font-bold uppercase text-slate-500">{title}</p>
                     <h2 className="mt-2 text-2xl font-black text-slate-900">{hasSeries ? formatNumber(total) : '—'}</h2>
                 </div>
                 <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-600">

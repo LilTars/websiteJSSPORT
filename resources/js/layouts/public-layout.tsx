@@ -1,6 +1,9 @@
+import { Link } from '@inertiajs/react';
 import type { PropsWithChildren, ReactNode } from 'react';
+import CookieConsent from '@/components/cookie-consent';
 import Navbar from '@/components/Navbar';
 import { ThemeProvider } from '@/contexts/theme-context';
+import { openCookieSettings } from '@/lib/cookie-consent';
 
 type SocialLink = {
     label: string;
@@ -65,14 +68,15 @@ const socialLinks: SocialLink[] = [
 function LayoutFrame({ children }: PropsWithChildren) {
     return (
         <div
-            className="relative isolate min-h-screen bg-white text-sport-text-light antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100"
-            style={{ fontFamily: "'IBM Plex Sans Thai Looped', 'Noto Sans Thai Looped', 'Sarabun', 'Prompt', ui-sans-serif, system-ui, sans-serif" }}
+            className="relative isolate min-h-screen bg-white font-sans text-sport-text-light antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100"
         >
-            <div className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(to_top,rgba(251,113,133,0.14),rgba(255,255,255,0.96)_28%,rgba(255,255,255,1)_60%),radial-gradient(circle_at_12%_18%,rgba(244,114,182,0.14),transparent_34%),radial-gradient(circle_at_84%_20%,rgba(248,113,113,0.1),transparent_30%)] dark:bg-[linear-gradient(to_top,rgba(244,63,94,0.16),rgba(2,6,23,0.92)_30%,rgba(2,6,23,1)_62%),radial-gradient(circle_at_12%_18%,rgba(244,114,182,0.2),transparent_36%),radial-gradient(circle_at_84%_20%,rgba(59,130,246,0.14),transparent_34%)]" />
+            <div className="site-ambient-bg pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(to_top,rgba(251,113,133,0.14),rgba(255,255,255,0.96)_28%,rgba(255,255,255,1)_60%),radial-gradient(circle_at_12%_18%,rgba(244,114,182,0.14),transparent_34%),radial-gradient(circle_at_84%_20%,rgba(248,113,113,0.1),transparent_30%)]" />
 
             <Navbar />
 
             <main className="relative z-10">{children}</main>
+
+            <CookieConsent />
 
             <footer className="border-t border-slate-700/80 bg-slate-950/95 px-4 py-10 text-slate-100 backdrop-blur-xl md:px-8 md:py-12">
                 <div className="mx-auto grid w-full max-w-7xl gap-7 md:grid-cols-2 xl:grid-cols-[1.35fr_1fr_1fr] xl:items-center xl:gap-8">
@@ -148,7 +152,7 @@ function LayoutFrame({ children }: PropsWithChildren) {
                                         </svg>
                                     </span>
                                     <span className="min-w-0">
-                                        <span className="block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                                        <span className="block text-xs font-semibold uppercase text-slate-400">
                                             โทร
                                         </span>
                                         <span className="block text-sm font-semibold text-slate-100 transition group-hover:text-pink-300">
@@ -158,6 +162,22 @@ function LayoutFrame({ children }: PropsWithChildren) {
                                 </a>
                             </li>
                         </ul>
+                    </div>
+                </div>
+
+                <div className="mx-auto mt-9 flex w-full max-w-7xl flex-col gap-3 border-t border-slate-700/70 pt-6 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+                    <p>© {new Date().getFullYear()} JS SPORT GROUP</p>
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                        <Link href="/privacy" className="transition hover:text-pink-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400">
+                            นโยบายความเป็นส่วนตัว
+                        </Link>
+                        <button
+                            type="button"
+                            onClick={openCookieSettings}
+                            className="transition hover:text-pink-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400"
+                        >
+                            ตั้งค่าคุกกี้
+                        </button>
                     </div>
                 </div>
             </footer>

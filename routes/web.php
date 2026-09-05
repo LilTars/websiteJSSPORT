@@ -29,6 +29,7 @@ Route::get('/products', [ProductPageController::class, 'index'])->name('products
 Route::get('/products/{product}', [ProductPageController::class, 'show'])->name('products.show');
 Route::post('/analytics/click', [ClickTrackingController::class, 'store'])->name('analytics.click');
 Route::inertia('/contact', 'Contact')->name('contact');
+Route::inertia('/privacy', 'Privacy')->name('privacy');
 
 Route::prefix('{current_team}')
     ->middleware(['auth', 'verified', EnsureTeamMembership::class])

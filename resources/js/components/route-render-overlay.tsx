@@ -2,11 +2,12 @@ import { router } from '@inertiajs/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PropsWithChildren } from 'react';
 
-const INITIAL_DISPLAY_MS = 3800;
+// Total time the overlay stays on screen, fade-out included.
+const INITIAL_DISPLAY_MS = 8000;
 const HOME_NAVIGATION_MS = 3000;
 const EXIT_ANIMATION_MS = 720;
+const SETTLE_MS = 160;
 const TOTAL_SEGMENTS = 24;
-const SEGMENT_STEP_MS = 95;
 
 const isHomePath = (path: string): boolean => path === '/';
 
@@ -14,14 +15,14 @@ export default function RouteRenderOverlay({ children }: PropsWithChildren) {
     const [isVisible, setIsVisible] = useState(true);
     const [isExiting, setIsExiting] = useState(false);
     const [filledSegments, setFilledSegments] = useState(0);
-    const loadingTimerRef = useRef<number | null>(null);
+    const frameRef = useRef<number | null>(null);
     const hideTimerRef = useRef<number | null>(null);
     const prefersReducedMotionRef = useRef(false);
 
     const clearTimers = useCallback(() => {
-        if (loadingTimerRef.current !== null) {
-            window.clearInterval(loadingTimerRef.current);
-            loadingTimerRef.current = null;
+        if (frameRef.current !== null) {
+            window.cancelAnimationFrame(frameRef.current);
+            frameRef.current = null;
         }
 
         if (hideTimerRef.current !== null) {
@@ -55,7 +56,7 @@ export default function RouteRenderOverlay({ children }: PropsWithChildren) {
         };
     }, [clearTimers]);
 
-    const startLoadingSequence = useCallback((durationMs: number) => {
+    const startLoadingSequence = useCallback((totalMs: number) => {
         if (prefersReducedMotionRef.current) {
             setIsVisible(false);
             setIsExiting(false);
@@ -69,31 +70,40 @@ export default function RouteRenderOverlay({ children }: PropsWithChildren) {
         setIsExiting(false);
         setFilledSegments(0);
 
-        const totalSteps = Math.max(1, Math.floor(durationMs / SEGMENT_STEP_MS));
-        const segmentsPerStep = TOTAL_SEGMENTS / totalSteps;
-        let progress = 0;
+        // Progress follows wall-clock time rather than a count of timer ticks:
+        // a busy main thread used to stretch the overlay well past its intended
+        // duration because every slipped interval added to the total.
+        const fillMs = Math.max(1, totalMs - SETTLE_MS - EXIT_ANIMATION_MS);
+        const startedAt = performance.now();
+        let lastSegment = 0;
 
-        loadingTimerRef.current = window.setInterval(() => {
-            progress += segmentsPerStep;
+        const tick = (now: number) => {
+            const ratio = Math.min(1, (now - startedAt) / fillMs);
+            const segment = Math.max(1, Math.ceil(ratio * TOTAL_SEGMENTS));
 
-            if (progress >= TOTAL_SEGMENTS) {
-                setFilledSegments(TOTAL_SEGMENTS);
-                clearTimers();
+            if (segment !== lastSegment) {
+                lastSegment = segment;
+                setFilledSegments(segment);
+            }
 
-                hideTimerRef.current = window.setTimeout(() => {
-                    setIsExiting(true);
-                    window.setTimeout(() => {
-                        setIsVisible(false);
-                        setIsExiting(false);
-                        setFilledSegments(0);
-                    }, EXIT_ANIMATION_MS);
-                }, 160);
+            if (ratio < 1) {
+                frameRef.current = window.requestAnimationFrame(tick);
 
                 return;
             }
 
-            setFilledSegments(Math.max(1, Math.ceil(progress)));
-        }, SEGMENT_STEP_MS);
+            frameRef.current = null;
+            hideTimerRef.current = window.setTimeout(() => {
+                setIsExiting(true);
+                hideTimerRef.current = window.setTimeout(() => {
+                    setIsVisible(false);
+                    setIsExiting(false);
+                    setFilledSegments(0);
+                }, EXIT_ANIMATION_MS);
+            }, SETTLE_MS);
+        };
+
+        frameRef.current = window.requestAnimationFrame(tick);
     }, [clearTimers]);
 
     useEffect(() => {

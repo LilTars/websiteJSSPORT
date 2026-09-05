@@ -13,7 +13,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Prompt', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                sans: ['Inter', 'Noto Sans Thai', 'Helvetica Neue', 'Helvetica', 'Arial', 'ui-sans-serif', 'system-ui', 'sans-serif'],
             },
             colors: {
                 sport: {

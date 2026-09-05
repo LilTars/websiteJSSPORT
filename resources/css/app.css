@@ -1,7 +1,10 @@
 @config '../../tailwind.config.js';
 
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai+Looped:wght@300;400;500;600;700&family=Noto+Sans+Thai+Looped:wght@300;400;500;600;700&display=swap');
+/* Neo-grotesque pairing in the Helvetica Now vein used by nike.com.
+   Both are variable fonts covering 100-900, so weights such as font-black (900)
+   render from real outlines instead of the browser faking bold - synthetic bold
+   was smearing Thai vowels and tone marks into their base consonants. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+Thai:wght@100..900&display=swap');
 
 @import 'tailwindcss';
 
@@ -13,8 +16,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+    /* Inter carries the Latin; Thai codepoints fall through to Noto Sans Thai,
+       whose loopless shapes match the grotesque Latin. */
     --font-sans:
-        'Prompt', ui-sans-serif, system-ui, sans-serif,
+        'Inter', 'Noto Sans Thai', 'Helvetica Neue', Helvetica, Arial,
+        ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 
@@ -238,12 +244,18 @@
     .mesport-wave-char {
         display: inline-block;
         animation: mesport-letter-wave 1.45s ease-in-out infinite;
+        /* One gradient stretched across the whole word, offset per letter, so the
+           ramp still reads as continuous while each letter clips only its own
+           slice. Clipping on the parent as well used to ghost the first glyph,
+           because a transformed child breaks the parent's text clip. */
         background-image: linear-gradient(90deg, #2563eb, #06b6d4, #10b981);
+        background-size: calc(var(--wave-count, 1) * 100%) 100%;
+        background-position-x: calc(var(--wave-index, 0) / max(var(--wave-count, 1) - 1, 1) * 100%);
+        background-repeat: no-repeat;
         background-clip: text;
         -webkit-background-clip: text;
         color: transparent;
         -webkit-text-fill-color: transparent;
-        will-change: transform;
     }
 
     .mesport-auto-track {
@@ -252,12 +264,19 @@
         will-change: transform;
     }
 
-    .render-overlay-bg {
+    /* One definition, shared by the pre-render overlay and the dark-mode page
+       backdrop, so the wash the visitor sees while loading is the same one the
+       site sits on once the overlay fades out. */
+    .render-overlay-bg,
+    .dark .site-ambient-bg {
         background:
             radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.25), transparent 36%),
             radial-gradient(circle at 82% 28%, rgba(248, 113, 113, 0.24), transparent 38%),
             radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.18), transparent 42%),
             linear-gradient(130deg, #020617 0%, #0f172a 36%, #111827 68%, #1f2937 100%);
+    }
+
+    .render-overlay-bg {
         animation: render-bg-shift 5.4s ease-in-out infinite;
         transform-origin: center;
     }

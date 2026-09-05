@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Models\Banner;
+use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -60,6 +62,7 @@ class HandleInertiaRequests extends Middleware
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'currentTeam' => fn () => $currentTeam ? $user?->toUserTeam($currentTeam) : null,
             'teams' => fn () => $user?->toUserTeams(includeCurrent: true) ?? [],
+            'navCatalog' => fn () => $this->navCatalog(),
             'relativeBanners' => fn () => Banner::query()
                 ->where('placement', 'relative')
                 ->where('is_active', true)
@@ -72,6 +75,63 @@ class HandleInertiaRequests extends Middleware
                 ])
                 ->filter(fn (array $banner) => $banner['imageUrl'] !== null)
                 ->values(),
+        ];
+    }
+
+    /**
+     * Catalogue data for the public navbar's product mega menu.
+     *
+     * @return array{
+     *     categories: list<array{id: int, name: string, slug: string, productCount: int}>,
+     *     featured: list<array{id: int, name: string, category: string|null, imageUrl: string|null}>
+     * }
+     */
+    private function navCatalog(): array
+    {
+        $categories = [];
+
+        $categoryRecords = ProductCategory::query()
+            ->where('is_active', true)
+            ->withCount(['products' => fn ($query) => $query->where('is_active', true)])
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get(['id', 'name', 'slug']);
+
+        foreach ($categoryRecords as $category) {
+            $categories[] = [
+                'id' => (int) $category->id,
+                'name' => (string) $category->name,
+                'slug' => (string) $category->slug,
+                'productCount' => (int) $category->products_count,
+            ];
+        }
+
+        $featured = [];
+
+        $featuredRecords = Product::query()
+            ->with('category:id,name')
+            ->where('is_active', true)
+            ->where(function ($query) {
+                $query->whereNull('published_at')
+                    ->orWhere('published_at', '<=', now());
+            })
+            ->orderBy('sort_order')
+            ->orderByDesc('id')
+            ->limit(3)
+            ->get(['id', 'name', 'product_category_id', 'thumbnail_path']);
+
+        foreach ($featuredRecords as $product) {
+            $featured[] = [
+                'id' => (int) $product->id,
+                'name' => (string) $product->name,
+                'category' => $product->category?->name,
+                'imageUrl' => $this->resolveImageUrl($product->thumbnail_path),
+            ];
+        }
+
+        return [
+            'categories' => $categories,
+            'featured' => $featured,
         ];
     }
 

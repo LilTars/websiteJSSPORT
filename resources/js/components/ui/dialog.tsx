@@ -100,7 +100,8 @@ function DialogTitle({
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
-      className={cn("text-lg leading-none font-semibold", className)}
+      // Thai dialog titles need room for their vowel and tone marks; leading-none clips them.
+      className={cn("text-lg leading-[1.3] font-semibold", className)}
       {...props}
     />
   )

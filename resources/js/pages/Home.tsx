@@ -2,9 +2,9 @@ import { usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import HomePageContent from '@/components/home/home-page-content';
-import { trackPageView } from '@/lib/track-click';
 import SeoHead from '@/components/seo/seo-head';
 import PublicLayout from '@/layouts/public-layout';
+import { trackPageView } from '@/lib/track-click';
 
 type HomeProductItem = {
     id: number;

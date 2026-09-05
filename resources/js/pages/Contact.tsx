@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import SeoHead from '@/components/seo/seo-head';
-import { trackPageView } from '@/lib/track-click';
 import PublicLayout from '@/layouts/public-layout';
+import { trackPageView } from '@/lib/track-click';
 
 type PageWithLayout = {
     (): ReactElement;
@@ -25,7 +25,7 @@ const Contact: PageWithLayout = () => {
 
             <section className="mx-auto grid w-full max-w-7xl gap-8 px-4 pb-14 pt-10 md:grid-cols-2 md:px-8 md:pt-14">
                 <div className="space-y-5">
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sport-accent">
+                    <p className="text-xs font-semibold uppercase text-sport-accent">
                         ขอใบเสนอราคา
                     </p>
                     <h1 className="text-3xl font-black uppercase leading-tight md:text-5xl">
@@ -56,7 +56,7 @@ const Contact: PageWithLayout = () => {
                 <div
                     className="rounded-3xl border border-black/10 bg-white/75 p-6 shadow-sm backdrop-blur dark:border-white/10 dark:bg-white/5 md:p-7"
                 >
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-sport-accent">
+                    <p className="text-xs font-semibold uppercase text-sport-accent">
                         ช่องทางติดต่อทางร้าน
                     </p>
                     <h2 className="mt-3 text-2xl font-black uppercase leading-tight md:text-3xl">
@@ -95,7 +95,7 @@ const Contact: PageWithLayout = () => {
 
                         <a
                             href="tel:0813209725"
-                            className="inline-flex items-center justify-center bg-gradient-to-r from-pink-500 to-red-600 px-5 py-3 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:-translate-y-0.5"
+                            className="inline-flex items-center justify-center bg-gradient-to-r from-pink-500 to-red-600 px-5 py-3 text-sm font-black uppercase text-white transition hover:-translate-y-0.5"
                             style={{
                                 clipPath:
                                     'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)',
