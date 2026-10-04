@@ -58,7 +58,6 @@ const Home: PageWithLayout = () => {
     return (
         <>
             <SeoHead
-                title="หน้าแรก"
                 description={`JSSPORT ร้านชุดกีฬาและอุปกรณ์กีฬา พร้อมสินค้ามาใหม่ ${productCount} รายการล่าสุดสำหรับทีม โรงเรียน และองค์กร`}
                 path="/"
                 keywords={['ชุดกีฬา', 'อุปกรณ์กีฬา', 'เสื้อทีม', 'สั่งผลิตชุดกีฬา', 'JSSPORT']}

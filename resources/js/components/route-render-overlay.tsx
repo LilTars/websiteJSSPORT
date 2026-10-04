@@ -2,8 +2,10 @@ import { router } from '@inertiajs/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PropsWithChildren } from 'react';
 
-// Total time the overlay stays on screen, fade-out included.
-const INITIAL_DISPLAY_MS = 8000;
+// Total time the overlay stays on screen, fade-out included. Kept short on first
+// load: the page underneath is already rendered, and a long cover delays what
+// visitors (and Google's Largest Contentful Paint) actually see.
+const INITIAL_DISPLAY_MS = 1400;
 const HOME_NAVIGATION_MS = 3000;
 const EXIT_ANIMATION_MS = 720;
 const SETTLE_MS = 160;
@@ -138,6 +140,7 @@ export default function RouteRenderOverlay({ children }: PropsWithChildren) {
 
             {isVisible && (
                 <div
+                    aria-hidden="true"
                     className={`pointer-events-none fixed inset-0 z-[200] flex items-center justify-center overflow-hidden bg-slate-950 transition-opacity duration-700 ease-out ${isExiting ? 'opacity-0' : 'opacity-100'}`}
                 >
                     <div className="absolute inset-0 render-overlay-bg" />
@@ -164,9 +167,9 @@ export default function RouteRenderOverlay({ children }: PropsWithChildren) {
                         <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-cyan-200/90">
                             Rendering Experience
                         </p>
-                        <h2 className="mt-4 text-3xl font-black uppercase leading-tight text-white md:text-5xl">
+                        <p className="mt-4 text-3xl font-black uppercase leading-tight text-white md:text-5xl">
                             JS SPORT x ME SPORT
-                        </h2>
+                        </p>
                         <p className="mt-4 max-w-2xl text-sm font-medium text-slate-200/85 md:text-base">
                             กำลังเตรียมหน้าถัดไปด้วยพลังงานเต็มสปีด
                         </p>

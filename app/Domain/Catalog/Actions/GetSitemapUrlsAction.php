@@ -49,8 +49,11 @@ class GetSitemapUrlsAction
 
         $productUrls = Product::query()
             ->where('is_active', true)
-            ->whereNotNull('published_at')
-            ->where('published_at', '<=', now())
+            // Same visibility rule as the public catalogue: no publish date means live now.
+            ->where(function ($query) {
+                $query->whereNull('published_at')
+                    ->orWhere('published_at', '<=', now());
+            })
             ->orderByDesc('updated_at')
             ->get(['id', 'updated_at'])
             ->map(fn (Product $product) => [

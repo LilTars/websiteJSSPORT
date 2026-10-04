@@ -10,7 +10,15 @@ import SettingsLayout from '@/layouts/settings/layout';
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
+    // SeoHead already builds complete public titles ("Page | Site"), so only
+    // bare titles (backoffice, auth) get the app name appended.
+    title: (title) => {
+        if (!title) {
+            return appName;
+        }
+
+        return title.includes(appName) || / \| [^|]+$/.test(title) ? title : `${title} - ${appName}`;
+    },
     layout: (name) => {
         const normalizedName = name.toLowerCase();
 
