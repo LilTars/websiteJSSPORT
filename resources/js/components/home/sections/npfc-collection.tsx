@@ -2,6 +2,7 @@ import { Link } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
 import { HOME_PRODUCT_FALLBACK_IMAGE } from '@/components/home/types';
 import type { HomeProductItem } from '@/components/home/types';
+import { useTilt3D } from '@/hooks/use-tilt-3d';
 import { trackSiteClick } from '@/lib/track-click';
 
 type NpfcCollectionProps = {
@@ -9,12 +10,13 @@ type NpfcCollectionProps = {
 };
 
 export default function NpfcCollection({ products }: NpfcCollectionProps) {
+    const sectionRef = useTilt3D<HTMLElement>(9);
     const collection = products[0];
     const collectionSlug = collection?.categorySlug ?? null;
     const collectionName = collection?.categoryName ?? 'เสื้อพิชญ';
 
     return (
-        <section className="relative isolate overflow-hidden py-16 md:py-24">
+        <section ref={sectionRef} className="relative isolate overflow-hidden py-16 md:py-24">
             {/* The club artwork is a poster with its own headline baked in, so it is
                 pushed back to a blurred texture instead of competing with the copy. */}
             <img
@@ -28,7 +30,7 @@ export default function NpfcCollection({ products }: NpfcCollectionProps) {
 
             <div className="mx-auto max-w-7xl px-4 md:px-8">
                 <div className="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-center lg:gap-14">
-                    <div>
+                    <div className="reveal-3d">
                         <p className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.28em] text-pink-300">
                             <span className="inline-block h-1.5 w-8 rounded-full bg-gradient-to-r from-pink-400 to-red-500" />
                             Exclusive Drop
@@ -95,9 +97,11 @@ export default function NpfcCollection({ products }: NpfcCollectionProps) {
                                         productName: product.name,
                                         referrer: window.location.href,
                                     })}
+                                    data-tilt
                                     className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/15 bg-white/[0.06] shadow-[0_24px_48px_-28px_rgba(0,0,0,0.9)] backdrop-blur-sm transition duration-300 hover:-translate-y-1.5 hover:border-pink-400/70 hover:bg-white/[0.1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
                                     aria-label={`ไปยังสินค้า ${product.name}`}
                                 >
+                                    <span aria-hidden="true" className="tilt-glare" />
                                     <div className="relative aspect-[3/4] overflow-hidden bg-slate-900">
                                         <img
                                             src={product.imageUrl ?? HOME_PRODUCT_FALLBACK_IMAGE}

@@ -8,12 +8,12 @@ export default function PartnerLogos({ logos }: PartnerLogosProps) {
     return (
         <section className="bg-white py-12 dark:bg-transparent md:py-16">
             <div className="mx-auto max-w-7xl px-4 md:px-8">
-                <p className="mb-8 text-xs font-semibold uppercase text-pink-500 md:mb-10">
+                <p className="reveal-3d mb-8 text-xs font-semibold uppercase text-pink-500 md:mb-10">
                     คู่ค้าของเรา
                 </p>
 
                 {logos.length > 0 ? (
-                    <div className="overflow-hidden py-6">
+                    <div className="overflow-hidden py-6 [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
                         <div
                             className="flex w-max whitespace-nowrap animate-marquee"
                             style={{ width: 'max-content' }}

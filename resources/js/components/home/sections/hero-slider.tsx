@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTilt3D } from '@/hooks/use-tilt-3d';
 import { trackSiteClick } from '@/lib/track-click';
 
 const defaultHeroSlides = [
@@ -13,6 +14,7 @@ type HeroSliderProps = {
 
 export default function HeroSlider({ slides }: HeroSliderProps) {
     const [slideCursor, setSlideCursor] = useState(0);
+    const sectionRef = useTilt3D<HTMLElement>();
     const effectiveHeroSlides = slides.length > 0 ? slides : defaultHeroSlides;
     // Derived so a shrinking banner list can never leave the cursor out of range.
     const activeSlide = slideCursor % effectiveHeroSlides.length;
@@ -36,8 +38,9 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
     }, [effectiveHeroSlides.length]);
 
     return (
-        <section className="relative min-h-[27vh] w-full overflow-hidden md:min-h-[85vh]">
-            <div className="absolute inset-0">
+        <section ref={sectionRef} data-parallax className="relative min-h-[27vh] w-full overflow-hidden md:min-h-[85vh]">
+            {/* Bleeds past the edges so the parallax drift never reveals a gap. */}
+            <div className="tilt-depth-back absolute -inset-6">
                 {effectiveHeroSlides.map((image, index) => (
                     <img
                         key={image}
@@ -54,8 +57,13 @@ export default function HeroSlider({ slides }: HeroSliderProps) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/20" />
             </div>
 
+            <div aria-hidden="true" className="hero-spotlight pointer-events-none absolute inset-0" />
+            <div aria-hidden="true" className="hero-floor pointer-events-none absolute inset-x-0 bottom-0 hidden h-[34%] overflow-hidden opacity-35 md:block">
+                <div className="hero-floor-grid" />
+            </div>
+
             <div className="relative mx-auto flex min-h-[27vh] w-full max-w-7xl items-end px-4 pb-6 pt-10 text-white md:min-h-[85vh] md:px-8 md:pb-20 md:pt-24">
-                <div className="max-w-4xl">
+                <div className="tilt-depth-front max-w-4xl">
                     <div key={activeSlide}>
                         <h1 className="-skew-x-12 text-5xl font-black uppercase leading-[0.82] tracking-tight animate-slide-up-fade md:text-7xl lg:text-8xl">
                             <span className="block skew-x-12 animate-skew-reveal animation-delay-100 bg-gradient-to-r from-blue-700 via-red-600 to-white bg-clip-text text-transparent drop-shadow-lg">

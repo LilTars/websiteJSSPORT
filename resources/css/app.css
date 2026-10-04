@@ -168,8 +168,32 @@
     .render-overlay-bg,
     .render-orbit-ring,
     .render-orbit-ring-delay,
-    .animate-marquee {
+    .animate-marquee,
+    .reveal-3d,
+    .hero-floor-grid {
         animation: none !important;
+    }
+}
+
+@keyframes reveal-3d {
+    from {
+        opacity: 0;
+        transform: perspective(900px) rotateX(28deg) translateY(36px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes hero-floor-run {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 0 64px;
     }
 }
 
@@ -336,5 +360,76 @@
 
     .render-logo-sub {
         transform: rotateY(10deg) translateZ(0);
+    }
+
+    /* ---- Home page 3D layer -------------------------------------------------
+       Custom properties are written by `useTilt3D`; without it (touch screens,
+       reduced motion, no JS) every value falls back to a flat, static card. */
+    [data-tilt] {
+        transform: perspective(1100px) rotateX(var(--tilt-rx, 0deg)) rotateY(var(--tilt-ry, 0deg));
+    }
+
+    .tilt-glare {
+        pointer-events: none;
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        opacity: 0;
+        background: radial-gradient(circle at var(--tilt-x, 50%) var(--tilt-y, 50%), rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.06) 38%, transparent 62%);
+        mix-blend-mode: soft-light;
+        transition: opacity 0.4s ease;
+    }
+
+    [data-tilting] .tilt-glare {
+        opacity: 1;
+    }
+
+    /* Layers drift with the pointer at different rates to fake depth inside
+       clipped cards, where real translateZ would be flattened by clip-path. */
+    .tilt-depth-back,
+    .tilt-depth-front {
+        transition: translate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .tilt-depth-back {
+        translate: calc(var(--tilt-px, 0) * -14px) calc(var(--tilt-py, 0) * -10px);
+    }
+
+    .tilt-depth-front {
+        translate: calc(var(--tilt-px, 0) * 10px) calc(var(--tilt-py, 0) * 8px);
+    }
+
+    .hero-spotlight {
+        background: radial-gradient(640px circle at var(--tilt-x, 30%) var(--tilt-y, 60%), rgba(236, 72, 153, 0.2), transparent 62%);
+        transition: background 0.2s linear;
+    }
+
+    .hero-floor {
+        perspective: 520px;
+        perspective-origin: 50% 0%;
+        mask-image: linear-gradient(to bottom, transparent, #000 35%, #000 70%, transparent);
+    }
+
+    .hero-floor-grid {
+        position: absolute;
+        inset: 0 -50% -20%;
+        transform: rotateX(64deg);
+        transform-origin: 50% 0%;
+        background-image:
+            linear-gradient(rgba(236, 72, 153, 0.55) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(236, 72, 153, 0.35) 1px, transparent 1px);
+        background-size: 64px 64px;
+        animation: hero-floor-run 2.4s linear infinite;
+    }
+
+    /* Scroll-driven entrance; browsers without view timelines just show the
+       content as-is, so nothing can end up stuck invisible. */
+    @supports (animation-timeline: view()) {
+        .reveal-3d {
+            transform-origin: 50% 100%;
+            animation: reveal-3d linear both;
+            animation-timeline: view();
+            animation-range: entry 5% entry 70%;
+        }
     }
 }

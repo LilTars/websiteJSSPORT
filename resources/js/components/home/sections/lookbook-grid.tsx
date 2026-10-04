@@ -1,3 +1,5 @@
+import { useTilt3D } from '@/hooks/use-tilt-3d';
+
 type LookbookItem = {
     title: string;
     kicker: string;
@@ -28,10 +30,12 @@ const lookbookItems: LookbookItem[] = [
 ];
 
 export default function LookbookGrid() {
+    const sectionRef = useTilt3D<HTMLElement>(5);
+
     return (
-        <section className="py-12 md:py-16">
+        <section ref={sectionRef} className="py-12 md:py-16">
             <div className="mx-auto max-w-7xl px-4 md:px-8">
-                <div className="mb-8 md:mb-10">
+                <div className="reveal-3d mb-8 md:mb-10">
                     <p className="text-xs font-semibold uppercase text-pink-500">
                         แคตตาล็อกแฟชั่น
                     </p>
@@ -46,7 +50,8 @@ export default function LookbookGrid() {
                     {lookbookItems.map((item) => (
                         <article
                             key={item.title}
-                            className={`group relative overflow-hidden ${item.layoutClass}`}
+                            data-tilt
+                            className={`group relative overflow-hidden transition-transform duration-500 ease-out ${item.layoutClass}`}
                             style={{
                                 clipPath:
                                     'polygon(0 0, calc(100% - 32px) 0, 100% 32px, 100% 100%, 0 100%)',
@@ -59,7 +64,9 @@ export default function LookbookGrid() {
                             />
                             <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/35 to-pink-800/45 transition duration-700 group-hover:from-black/70 group-hover:via-pink-900/40 group-hover:to-pink-500/40" />
 
-                            <div className="relative flex h-full flex-col justify-end p-6 text-white md:p-8">
+                            <span aria-hidden="true" className="tilt-glare" />
+
+                            <div className="tilt-depth-front relative flex h-full flex-col justify-end p-6 text-white md:p-8">
                                 <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-pink-200">
                                     {item.kicker}
                                 </p>

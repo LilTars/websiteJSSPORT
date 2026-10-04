@@ -90,7 +90,7 @@ export default function TikTokFeed() {
         <section className="relative border-y border-slate-200 bg-white py-12 dark:border-white/10 dark:bg-transparent md:py-16">
             <div className="mx-auto max-w-7xl px-4 md:px-8">
                 <div className="grid gap-8 lg:grid-cols-12 lg:items-start">
-                    <div className="lg:col-span-5 lg:sticky lg:top-24">
+                    <div className="reveal-3d lg:col-span-5 lg:sticky lg:top-24">
                         <p className="inline-flex items-center gap-2 text-xs font-bold uppercase text-red-400">
                             <span className="relative inline-flex h-2.5 w-2.5">
                                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />

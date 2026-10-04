@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { HOME_PRODUCT_FALLBACK_IMAGE } from '@/components/home/types';
 import type { HomeProductItem } from '@/components/home/types';
 import { buildLoopedTrack, handleCarouselArrowKeys, useAutoScrollCarousel } from '@/components/home/use-auto-scroll-carousel';
+import { useTilt3D } from '@/hooks/use-tilt-3d';
 import { trackSiteClick } from '@/lib/track-click';
 
 const mesportShowcaseTitle = 'ME SPORT STUDIO';
@@ -16,6 +17,7 @@ type MesportShowcaseProps = {
 export default function MesportShowcase({ products }: MesportShowcaseProps) {
     const [isPaused, setIsPaused] = useState(false);
     const carouselRef = useAutoScrollCarousel<HTMLDivElement>(isPaused, 0.45);
+    const sectionRef = useTilt3D<HTMLElement>(8);
     const dragStateRef = useRef({
         isDragging: false,
         startX: 0,
@@ -69,9 +71,9 @@ export default function MesportShowcase({ products }: MesportShowcaseProps) {
     };
 
     return (
-        <section className="bg-white py-12 dark:bg-transparent md:py-16">
+        <section ref={sectionRef} className="bg-white py-12 dark:bg-transparent md:py-16">
             <div className="mx-auto max-w-7xl px-4 md:px-8">
-                <div className="mb-8 md:mb-10">
+                <div className="reveal-3d mb-8 md:mb-10">
                     <p className="text-xs font-black uppercase tracking-[0.24em] text-pink-500">
                         ME SPORT  STUDIO
                     </p>
@@ -117,7 +119,8 @@ export default function MesportShowcase({ products }: MesportShowcaseProps) {
                             <Link
                                 key={`${item.id}-${index}`}
                                 href={`/products/${item.id}`}
-                                className={`group relative shrink-0 overflow-hidden border border-emerald-200/70 shadow-[0_18px_45px_-25px_rgba(3,105,161,0.55)] dark:border-emerald-400/30 ${cardLayoutClass}`}
+                                data-tilt
+                                className={`group relative shrink-0 overflow-hidden border border-emerald-200/70 transition-transform duration-500 ease-out shadow-[0_18px_45px_-25px_rgba(3,105,161,0.55)] dark:border-emerald-400/30 ${cardLayoutClass}`}
                                 style={{
                                     clipPath:
                                         'polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%)',
@@ -141,6 +144,7 @@ export default function MesportShowcase({ products }: MesportShowcaseProps) {
                                     className="absolute inset-0 h-full w-full object-cover transition duration-1000 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-emerald-300 via-sky-300 to-white/70 opacity-90" />
+                                <span aria-hidden="true" className="tilt-glare" />
                             </Link>
                         ))}
                     </div>

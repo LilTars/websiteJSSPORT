@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { HOME_PRODUCT_FALLBACK_IMAGE } from '@/components/home/types';
 import type { HomeProductItem } from '@/components/home/types';
 import { buildLoopedTrack, handleCarouselArrowKeys, useAutoScrollCarousel } from '@/components/home/use-auto-scroll-carousel';
+import { useTilt3D } from '@/hooks/use-tilt-3d';
 import { trackSiteClick } from '@/lib/track-click';
 
 type LatestProductsProps = {
@@ -12,6 +13,7 @@ type LatestProductsProps = {
 export default function LatestProducts({ products }: LatestProductsProps) {
     const [isPaused, setIsPaused] = useState(false);
     const carouselRef = useAutoScrollCarousel<HTMLDivElement>(isPaused, 0.4);
+    const sectionRef = useTilt3D<HTMLElement>(7);
 
     const cards = products.map((product) => ({
         id: product.id,
@@ -24,9 +26,9 @@ export default function LatestProducts({ products }: LatestProductsProps) {
     const carouselItems = buildLoopedTrack(cards, 6);
 
     return (
-        <section className="py-12 md:py-16">
+        <section ref={sectionRef} className="py-12 md:py-16">
             <div className="mx-auto max-w-7xl px-4 md:px-8">
-                <div className="mb-8 flex flex-col gap-3 md:mb-10 md:flex-row md:items-end md:justify-between md:gap-6">
+                <div className="reveal-3d mb-8 flex flex-col gap-3 md:mb-10 md:flex-row md:items-end md:justify-between md:gap-6">
                     <div className="max-w-full">
                         <p className="text-xs font-semibold uppercase text-pink-500">
                             สินค้ามาใหม่
@@ -62,6 +64,7 @@ export default function LatestProducts({ products }: LatestProductsProps) {
                                 key={`${item.id}-${index}`}
                                 href={`/products/${item.id}`}
                                 aria-label={`ดูรายละเอียด ${item.name}`}
+                                data-tilt
                                 onClick={() => trackSiteClick({
                                     eventType: 'product_click',
                                     page: 'home',
@@ -83,8 +86,9 @@ export default function LatestProducts({ products }: LatestProductsProps) {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent" />
                                 <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-pink-500 via-pink-700 to-transparent opacity-80" />
+                                <span aria-hidden="true" className="tilt-glare" />
 
-                                <div className="absolute bottom-0 left-0 right-0 p-5 text-white md:p-6">
+                                <div className="tilt-depth-front absolute bottom-0 left-0 right-0 p-5 text-white md:p-6">
                                     <p className="text-[11px] font-bold uppercase text-pink-200">
                                         {item.categoryName ?? '-'}
                                     </p>
