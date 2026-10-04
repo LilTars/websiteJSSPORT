@@ -7,5 +7,16 @@
 CHANGELOG.md export-ignore
 README.md export-ignore
 .github/workflows/browser-tests.yml export-ignore
-public/images/** !text !filter !merge !diff
-public/apple-touch-icon.png !text !filter !merge !diff
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.mp4 binary
+public/images/** binary
+public/apple-touch-icon.png binary
